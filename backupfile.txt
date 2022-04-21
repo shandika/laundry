@@ -1,0 +1,2 @@
+1. Fungsi (Membuka Halaman Detail Pelanggan Non Member)
+2. View (Detail Pelanggan Non Member)
