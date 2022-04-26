@@ -1596,11 +1596,11 @@ footer #search {
   margin-bottom: 80px;
 }
 
-footer #search input::placeholder {
+footer textarea::placeholder {
   color: #fff;
 }
 
-footer #search input {
+footer textarea {
   font-size: 15px;
   color: #fff;
   outline: none;
