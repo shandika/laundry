@@ -381,7 +381,7 @@ https://templatemo.com/tm-570-chain-app-dev
             <h4>Contact Us</h4>
             <p>Jl. Palakali, Kukusan, Kec. Beji, Depok, Jawa Barat, 16425</p>
             <p><a href="#">0811-879-4225</a></p>
-            <p><a href="mailto:cleanyours23@gmail.com">cleanyours23@gmail.com</a></p>
+            <p><a href="mailto:cleanyours2022@gmail.com">cleanyours2022@gmail.com</a></p>
           </div>
         </div>
         <div class="col-lg-3">
