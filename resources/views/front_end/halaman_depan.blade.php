@@ -388,11 +388,11 @@ https://templatemo.com/tm-570-chain-app-dev
           <div class="footer-widget">
             <h4>About Us</h4>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Newsletter</a></li>
-              <li><a href="#">Pricing</a></li>
+              <li><a href="#top">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#newsletter">Newsletter</a></li>
+              <li><a href="#pricing">Pricing</a></li>
             </ul>
           </div>
         </div>
@@ -400,8 +400,8 @@ https://templatemo.com/tm-570-chain-app-dev
           <div class="footer-widget">
             <h4>Contact Us</h4>
             <ul>
-              <li><a href="#">Whatsapp</a></li>
-              <li><a href="#">Instagram</a></li>
+              <li><a href="whatsapp://send?text=Hello&phone=+628118794225">Whatsapp</a></li>
+              <li><a href="https://www.instagram.com/cleanyours_/?hl=id">Instagram</a></li>
               <li><a href="#">Telegram</a></li>
             </ul>
           </div>
