@@ -363,12 +363,12 @@ https://templatemo.com/tm-570-chain-app-dev
             <div class="row">
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <input type="address" name="address" class="email" placeholder="Email Address..." autocomplete="on" required>
+                  <textarea name="address" class="textmasukan" placeholder="Ketik disini" autocomplete="on" required></textarea>
                 </fieldset>
               </div>
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <button type="submit" class="main-button">Subscribe Now <i class="fa fa-angle-right"></i></button>
+                  <button type="submit" class="main-button">Kirim Masukan <i class="fa fa-angle-right"></i></button>
                 </fieldset>
               </div>
             </div>
@@ -381,7 +381,7 @@ https://templatemo.com/tm-570-chain-app-dev
             <h4>Contact Us</h4>
             <p>Jl. Palakali, Kukusan, Kec. Beji, Depok, Jawa Barat, 16425</p>
             <p><a href="#">0811-879-4225</a></p>
-            <p><a href="#">cleanyours23@gmail.com</a></p>
+            <p><a href="mailto:cleanyours23@gmail.com">cleanyours23@gmail.com</a></p>
           </div>
         </div>
         <div class="col-lg-3">
