@@ -77,8 +77,10 @@
 										<p>Belum Diproses</p>
 										@elseif($pesanan->status == 1)
 										<p>Sedang Diproses</p>
-										@else($pesanan->status == 2)
+										@elseif($pesanan->status == 2)
 										<p>Pesanan Ditunda</p>
+										@elseif($pesanan->status == 3)
+										<p>Pesanan Selesai</p>
 										@endif
 									</td>
 								</tr>
@@ -447,6 +449,7 @@
 <script src="{{ asset('plugins/tables/js/datatable/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/tables/js/datatable-init/datatable-basic.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert/js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/jquery.form-validator.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).on('click', '.diterima-btn', function(e){
 		e.preventDefault();

@@ -363,12 +363,12 @@ https://templatemo.com/tm-570-chain-app-dev
             <div class="row">
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <input type="address" name="address" class="email" placeholder="Email Address..." autocomplete="on" required>
+                  <textarea name="address" class="textmasukan" placeholder="Ketik disini" autocomplete="on" required></textarea>
                 </fieldset>
               </div>
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <button type="submit" class="main-button">Subscribe Now <i class="fa fa-angle-right"></i></button>
+                  <button type="submit" class="main-button">Kirim Masukan <i class="fa fa-angle-right"></i></button>
                 </fieldset>
               </div>
             </div>
@@ -381,18 +381,18 @@ https://templatemo.com/tm-570-chain-app-dev
             <h4>Contact Us</h4>
             <p>Jl. Palakali, Kukusan, Kec. Beji, Depok, Jawa Barat, 16425</p>
             <p><a href="#">0811-879-4225</a></p>
-            <p><a href="#">cleanyours23@gmail.com</a></p>
+            <p><a href="mailto:cleanyours2022@gmail.com">cleanyours2022@gmail.com</a></p>
           </div>
         </div>
         <div class="col-lg-3">
           <div class="footer-widget">
             <h4>About Us</h4>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Newsletter</a></li>
-              <li><a href="#">Pricing</a></li>
+              <li><a href="#top">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#newsletter">Newsletter</a></li>
+              <li><a href="#pricing">Pricing</a></li>
             </ul>
           </div>
         </div>
@@ -400,8 +400,8 @@ https://templatemo.com/tm-570-chain-app-dev
           <div class="footer-widget">
             <h4>Contact Us</h4>
             <ul>
-              <li><a href="#">Whatsapp</a></li>
-              <li><a href="#">Instagram</a></li>
+              <li><a href="whatsapp://send?text=Hello&phone=+628118794225">Whatsapp</a></li>
+              <li><a href="https://www.instagram.com/cleanyours_/?hl=id">Instagram</a></li>
               <li><a href="#">Telegram</a></li>
             </ul>
           </div>

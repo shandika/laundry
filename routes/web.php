@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth', 'checkRole:admin,kasir']], function(){
 	Route::get('/pdf_pelanggan/{id}', 'HalPelangganController@pdfPelanggan');
 	Route::get('/pesanan_baru', 'HalPelangganController@halamanPesanan');
 	Route::post('/edit_pesanan/{id}', 'HalPelangganController@updatePesanan');
+	Route::post('/selesai_pesanan/{id}', 'HalPelangganController@selesaiPesanan');
 	Route::post('/batalkan_pesanan/{id}', 'HalPelangganController@batalkanPesanan');
 	Route::post('/jadikan_member/{id}', 'HalPelangganController@jadikanMember');
 // => Halaman Transaksi

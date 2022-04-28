@@ -52,6 +52,8 @@ class HalInventoryController extends Controller
         $Barangs->jumlah_awal = $req->jumlah_barang;
         $Barangs->jumlah_akhir = $req->jumlah_barang;
         $Barangs->harga = $req->harga_barang;
+        $Barangs->total = $req->harga_barang * $req->jumlah_barang;
+        $Barangs->sisa = $req->harga_barang * $req->jumlah_barang;
         $Barangs->save(); 
 
         $Mutasis = new Mutasi_barang;

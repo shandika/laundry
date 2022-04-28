@@ -77,8 +77,10 @@
 										<p>Belum Diproses</p>
 										@elseif($pesanan->status == 1)
 										<p>Sedang Diproses</p>
-										@else($pesanan->status == 2)
+										@elseif($pesanan->status == 2)
 										<p>Pesanan Ditunda</p>
+										@elseif($pesanan->status == 3)
+										<p>Pesanan Selesai</p>
 										@endif
 									</td>
 								</tr>
@@ -410,9 +412,9 @@
 				<div class="form-group">
 					<div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Pilih Jenis Cucian : </p></div>
 					<label class="radio-inline mr-3">
-						<input type="radio" name="jenis_cucian" value="Satuan"> Cuci Satuan</label>
+						<input type="radio" name="jenis_cucian" value="Satuan" required> Cuci Satuan</label>
 					<label class="radio-inline">
-						<input type="radio" name="jenis_cucian" value="Kiloan"> Cuci Kiloan</label>
+						<input type="radio" name="jenis_cucian" value="Kiloan" required> Cuci Kiloan</label>
 				</div>
 				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
 			</div>
@@ -422,9 +424,9 @@
 				<div class="form-group">
 					<div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Pembayaran : </p></div>
 					<label class="radio-inline mr-3">
-						<input type="radio" name="pembayaran" value="Tunai"> Tunai</label>
+						<input type="radio" name="pembayaran" value="Tunai" required> Tunai</label>
 					<label class="radio-inline">
-						<input type="radio" name="pembayaran" value="Non-Tunai"> Non-Tunai</label>
+						<input type="radio" name="pembayaran" value="Non-Tunai" required> Non-Tunai</label>
 				</div>
 				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
 			</div>
@@ -447,6 +449,7 @@
 <script src="{{ asset('plugins/tables/js/datatable/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/tables/js/datatable-init/datatable-basic.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert/js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/jquery.form-validator.min.js') }}"></script>
 <script type="text/javascript">
 	$(document).on('click', '.diterima-btn', function(e){
 		e.preventDefault();

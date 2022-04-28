@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="table-responsive">
-                                        <table class="display nowrap tabel-riwayat">
+                                        <table class="table table-striped table-bordered zero-configuration tabel-riwayat">
                                             <thead class="text-center">
                                                 <tr>
                                                     <th>No</th>
@@ -132,6 +132,8 @@
                                     <th>Jumlah Awal</th>
                                     <th>Jumlah Sekarang</th>
                                     <th>Harga Barang</th>
+                                    <th>Total Harga</th>
+                                    <th>Sisa</th>
                                     <th>Tanggal Updated</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -146,6 +148,8 @@
                                     <td class="text-center">{{ $barang->jumlah_awal }}</td>
                                     <td class="text-center">{{ $barang->jumlah_akhir }}</td>
                                     <td class="text-center">Rp. {{ number_format($barang->harga,2,',','.') }}</td>
+                                    <td class="text-center">Rp. {{ number_format($barang->total,2,',','.') }}</td>
+                                    <td class="text-center">Rp. {{ number_format($barang->sisa,2,',','.') }}</td>
                                     <td class="text-center">{{ date('d M Y', strtotime($barang->updated_at)) }}</td>
                                     <td style="text-align: center;">
                                     	<div class="dropdown custom-dropdown">
@@ -244,7 +248,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
                 <div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Jumlah Barang : </p></div>
-					<input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang">
+					<input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang" required>
 				</div>
 				<div class="jumlah_barang_error" style="margin-top: -20px;"></div>
 			</div>
@@ -253,7 +257,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
                 <div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Harga Barang : </p></div>
-					<input type="number" class="form-control" name="harga_barang" id="harga_barang">
+					<input type="number" class="form-control" name="harga_barang" id="harga_barang" required>
 				</div>
 				<div class="harga_barang_error" style="margin-top: -20px;"></div>
 			</div>
@@ -280,6 +284,7 @@
 <script src="{{ asset('plugins/toastr/js/toastr.min.js') }}"></script>
 <!-- End Datatable -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{{ asset('js/jquery.form-validator.min.js') }}"></script>
 
 <script type="text/javascript">
 $(document).on('click', '.lihat_barang_btn', function(e){
@@ -385,6 +390,7 @@ swal(
     $('.tabel-riwayat').DataTable({
         "searching": false,
         "scrollY" : "200px",
+        "scrollX" : true
     });
 </script>
 <script>
