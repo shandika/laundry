@@ -379,8 +379,8 @@ https://templatemo.com/tm-570-chain-app-dev
         <div class="col-lg-3">
           <div class="footer-widget">
             <h4>Contact Us</h4>
-            <p>Jl. Palakali, Kukusan, Kec. Beji, Depok, Jawa Barat, 16425</p>
-            <p><a href="#">0811-879-4225</a></p>
+            <p><a href="https://www.google.co.id/maps/place/CleanYours+Laundry/@-6.3681886,106.8162841,17z/data=!3m1!4b1!4m5!3m4!1s0x2e69ec1d82b16963:0x915e28fa2ce723eb!8m2!3d-6.3681939!4d106.8184728">Jl. Palakali, Kukusan, Kec. Beji, Depok, Jawa Barat, 16425</a></p>
+            <p><a href="tel:+628118794225">0811-879-4225</a></p>
             <p><a href="mailto:cleanyours2022@gmail.com">cleanyours2022@gmail.com</a></p>
           </div>
         </div>
