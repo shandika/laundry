@@ -235,7 +235,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
                 <div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Nama Barang : </p></div>
-					<input type="text" class="form-control" name="nama_barang" id="nama_barang">
+					<input type="text" class="form-control" name="nama_barang" id="nama_barang" required>
 				</div>
 				<div class="nama_barang_error" style="margin-top: -20px;"></div>
 			</div>
@@ -244,7 +244,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
                 <div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Jumlah Barang : </p></div>
-					<input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang">
+					<input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang" required>
 				</div>
 				<div class="jumlah_barang_error" style="margin-top: -20px;"></div>
 			</div>
@@ -253,7 +253,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
                 <div style="margin-bottom: -10px;"><p class="font-weight-bold text-dark">Harga Barang : </p></div>
-					<input type="number" class="form-control" name="harga_barang" id="harga_barang">
+					<input type="number" class="form-control" name="harga_barang" id="harga_barang" required>
 				</div>
 				<div class="harga_barang_error" style="margin-top: -20px;"></div>
 			</div>

@@ -357,7 +357,7 @@
                                 @if($pesanans->status == 2)
                                 <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan pada tanggal {{ date('d M Y', strtotime($pesanans->created_at)) }} ditunda untuk sementara dikarenakan <em>{{ substr($pesanans->alasan_batal, 0, -1) }}</em></p>
                                 @elseif($pesanans->status == 1)
-                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan pada tanggal {{ date('d M Y', strtotime($pesanans->created_at)) }} sedang proses penjemputan ke tempan Anda, mohon siapkan pesanan laundry Anda.</em></p>
+                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan pada tanggal {{ date('d M Y', strtotime($pesanans->created_at)) }} sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda.</em></p>
                                 @endif
                             @endif
                         </div>

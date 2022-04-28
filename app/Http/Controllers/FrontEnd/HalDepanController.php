@@ -53,6 +53,11 @@ class HalDepanController extends Controller
         ->first();
         $penggunas->password = Hash::make($req->password);
         $penggunas->save();
+        $pelanggans = Pelanggan::select('pelanggans.*')
+        ->where('kd_pelanggan', $session)
+        ->first();
+        $pelanggans->password = $req->password;
+        $pelanggans->save();
         $req->session()->forget('email');
         Session::flash('terubah', 'Password berhasil dirubah');
         return redirect('/login');

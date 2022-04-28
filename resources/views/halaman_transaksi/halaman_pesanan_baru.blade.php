@@ -69,11 +69,13 @@
                                     <td>{{ date('d M Y', strtotime($pesanan->updated_at)) }}</td>
                                     <td>
                                         @if($pesanan->status == 0)
-                                        <p>Belum Diproses</p>
+                                        <button class="btn btn-warning" disabled>Belum Diproses</button>
                                         @elseif($pesanan->status == 1)
                                         <p>Sedang Diproses</p>
                                         @elseif($pesanan->status == 2)
                                         <p>Pesanan Dibatalkan</p>
+                                        @elseif($pesanan->status == 3)
+                                        <p>Pesanan Selesai</p>
                                         @endif
                                     </td>
                                     <td>
@@ -84,11 +86,17 @@
                                     </form>
                                     @elseif($pesanan->status == 1)
                                     <button class="btn font-weight-bold btn-sm mb-1 btn-danger" data-toggle="modal" data-target="#modalBatal{{ $pesanan->id }}">Batalkan </button>
+                                    <form action="{{ url('/selesai_pesanan/'.$pesanan->id) }}" method="post">
+                                        @csrf
+                                    <button type="submit" class="btn btn-sm btn-success font-weight-bold">Selesai</button>
+                                    </form>
                                     @elseif($pesanan->status == 2)
                                     <form action="{{ url('/edit_pesanan/'.$pesanan->id) }}" method="post">
                                         @csrf
                                     <button type="submit" class="btn btn-sm btn-primary font-weight-bold">Proses</button>
                                     </form>
+                                    @elseif($pesanan->status == 3)
+                                    <p class="text-center">-</p>
                                     @endif
                                     </td>
                                 </tr>

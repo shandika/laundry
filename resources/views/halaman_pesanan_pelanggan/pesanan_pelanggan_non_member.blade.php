@@ -77,8 +77,10 @@
 										<p>Belum Diproses</p>
 										@elseif($pesanan->status == 1)
 										<p>Sedang Diproses</p>
-										@else($pesanan->status == 2)
+										@elseif($pesanan->status == 2)
 										<p>Pesanan Ditunda</p>
+										@elseif($pesanan->status == 3)
+										<p>Pesanan Selesai</p>
 										@endif
 									</td>
 								</tr>

@@ -168,6 +168,7 @@ class HalPelangganController extends Controller
         // ->get();
         $pesanans = Pesanan::join('pelanggans', 'pelanggans.kd_pelanggan', '=', 'pesanans.kd_pelanggan')
         ->select('pesanans.*', 'pelanggans.id as id_pelanggan', 'pelanggans.nama_pelanggan', 'pelanggans.cek_member', 'pelanggans.alamat_pelanggan', 'pelanggans.no_hp_pelanggan')
+        ->orderBy('pesanans.created_at', 'desc')
         ->get();
         return view('halaman_transaksi.halaman_pesanan_baru', compact('pesanans'));
     }
@@ -179,6 +180,16 @@ class HalPelangganController extends Controller
 		$pesanans->status = 1;
         $pesanans->save();
         Session::flash('terubah', 'Pesanan Diproses');
+		return redirect('/pesanan_baru');
+    }
+
+    // Membuka Halaman Selesai Pesanan
+    public function selesaiPesanan($id)
+    {
+        $pesanans = Pesanan::find($id);
+		$pesanans->status = 3;
+        $pesanans->save();
+        Session::flash('terubah', 'Pesanan Selesai');
 		return redirect('/pesanan_baru');
     }
 
