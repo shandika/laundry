@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth', 'checkRole:admin,kasir']], function(){
 	Route::post('/filter_laporan_pegawai/{id}', 'HalLaporanController@filterLaporanPegawai');
 	Route::post('/pdf_laporan_transaksi', 'HalLaporanController@pdfLaporanTransaksi');
 	Route::post('/pdf_laporan_pegawai/{id}', 'HalLaporanController@pdfLaporanPegawai');
+	Route::post('/pdf_laporan_barang', 'HalLaporanController@pdfLaporanBarang');
 	// Halaman Inventory
 	Route::get('/kelola_barang', 'HalInventoryController@halamanKelolaBarang');
 	Route::post('/simpan_barang', 'HalInventoryController@simpanBarang');
