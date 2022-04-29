@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 14, 2022 at 03:42 AM
+-- Generation Time: Apr 29, 2022 at 01:11 PM
 -- Server version: 5.7.33
 -- PHP Version: 7.4.19
 
@@ -34,6 +34,8 @@ CREATE TABLE `barangs` (
   `jumlah_awal` int(11) NOT NULL,
   `jumlah_akhir` int(11) NOT NULL,
   `harga` bigint(20) DEFAULT NULL,
+  `total` bigint(20) NOT NULL,
+  `sisa` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -42,11 +44,10 @@ CREATE TABLE `barangs` (
 -- Dumping data for table `barangs`
 --
 
-INSERT INTO `barangs` (`id`, `nama_barang`, `kd_barang`, `jumlah_awal`, `jumlah_akhir`, `harga`, `created_at`, `updated_at`) VALUES
-(8, 'Sabun Cuci', 'B0001', 40, 40, 10000, '2022-03-28 23:24:51', '2022-03-29 16:06:01'),
-(9, 'Pewangi', 'B0002', 50, 50, 1000, '2022-03-28 23:25:38', '2022-03-29 16:07:12'),
-(10, 'Pulpen', 'B0003', 50, 50, 3000, '2022-03-28 23:26:30', '2022-03-28 23:26:30'),
-(11, 'Plastik', 'B0004', 20, 30, 1000, '2022-03-29 15:41:18', '2022-03-29 15:48:36');
+INSERT INTO `barangs` (`id`, `nama_barang`, `kd_barang`, `jumlah_awal`, `jumlah_akhir`, `harga`, `total`, `sisa`, `created_at`, `updated_at`) VALUES
+(26, 'Pewangi Pakaian', 'B0001', 20, 15, 5000, 100000, 75000, '2022-04-29 09:35:00', '2022-04-29 09:35:10'),
+(27, 'Sabun Cuci', 'B0002', 20, 20, 5000, 100000, 100000, '2022-04-29 09:35:32', '2022-04-29 09:35:32'),
+(28, 'Selotip', 'B0003', 10, 10, 3000, 30000, 30000, '2022-04-29 09:35:47', '2022-04-29 09:35:47');
 
 -- --------------------------------------------------------
 
@@ -160,7 +161,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2022_03_29_035059_create_mutasi_barang_table', 8),
 (19, '2022_03_29_051550_add_kd_barang_to_barangs_table', 9),
 (20, '2022_03_29_121738_add_jumlah_to_barangs_table', 10),
-(21, '2022_04_12_201707_add_harga_to_barangs_table', 11);
+(21, '2022_04_12_201707_add_harga_to_barangs_table', 11),
+(22, '2022_04_28_111356_add_total_to_barangs_table', 12),
+(23, '2022_04_29_144823_add_total_to_mutasi_barangs_table', 13);
 
 -- --------------------------------------------------------
 
@@ -173,6 +176,8 @@ CREATE TABLE `mutasi_barangs` (
   `id_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `jumlah_awal` int(11) NOT NULL,
   `jumlah_akhir` int(11) NOT NULL,
+  `total` bigint(20) NOT NULL,
+  `sisa` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -181,23 +186,11 @@ CREATE TABLE `mutasi_barangs` (
 -- Dumping data for table `mutasi_barangs`
 --
 
-INSERT INTO `mutasi_barangs` (`id`, `id_barang`, `jumlah_awal`, `jumlah_akhir`, `created_at`, `updated_at`) VALUES
-(7, 'B0001', 20, 20, '2022-03-28 23:24:51', '2022-03-28 23:24:51'),
-(8, 'B0002', 26, 26, '2022-03-28 23:25:38', '2022-03-28 23:25:38'),
-(9, 'B0003', 50, 50, '2022-03-28 23:26:30', '2022-03-28 23:26:30'),
-(10, 'B0001', 20, 17, '2022-03-29 02:09:28', '2022-03-29 02:09:28'),
-(11, 'B0001', 17, 13, '2022-03-29 05:28:23', '2022-03-29 05:28:23'),
-(12, 'B0001', 13, 10, '2022-03-29 05:32:34', '2022-03-29 05:32:34'),
-(13, 'B0002', 26, 23, '2022-03-29 12:36:12', '2022-03-29 12:36:12'),
-(14, 'B0004', 20, 20, '2022-03-29 15:41:18', '2022-03-29 15:41:18'),
-(15, 'B0004', 20, 15, '2022-03-29 15:44:27', '2022-03-29 15:44:27'),
-(16, 'B0004', 15, 13, '2022-03-29 15:44:48', '2022-03-29 15:44:48'),
-(17, 'B0004', 13, 0, '2022-03-29 15:48:15', '2022-03-29 15:48:15'),
-(18, 'B0004', 0, 30, '2022-03-29 15:48:36', '2022-03-29 15:48:36'),
-(19, 'B0001', 10, 0, '2022-03-29 16:05:47', '2022-03-29 16:05:47'),
-(20, 'B0001', 0, 40, '2022-03-29 16:06:01', '2022-03-29 16:06:01'),
-(21, 'B0002', 23, 0, '2022-03-29 16:06:42', '2022-03-29 16:06:42'),
-(22, 'B0002', 0, 50, '2022-03-29 16:07:12', '2022-03-29 16:07:12');
+INSERT INTO `mutasi_barangs` (`id`, `id_barang`, `jumlah_awal`, `jumlah_akhir`, `total`, `sisa`, `created_at`, `updated_at`) VALUES
+(58, 'B0001', 20, 20, 100000, 100000, '2022-04-29 09:35:00', '2022-04-29 09:35:00'),
+(59, 'B0001', 20, 15, 100000, 75000, '2022-04-29 09:35:10', '2022-04-29 09:35:10'),
+(60, 'B0002', 20, 20, 100000, 100000, '2022-04-29 09:35:32', '2022-04-29 09:35:32'),
+(61, 'B0003', 10, 10, 30000, 30000, '2022-04-29 09:35:47', '2022-04-29 09:35:47');
 
 -- --------------------------------------------------------
 
@@ -341,7 +334,7 @@ CREATE TABLE `pesanans` (
 --
 
 INSERT INTO `pesanans` (`id`, `kd_pelanggan`, `jenis_cucian`, `pembayaran`, `created_at`, `updated_at`, `status`, `alasan_batal`) VALUES
-(6, 'K0001', 'Satuan', 'Non-Tunai', '2022-03-12 04:35:39', '2022-03-18 02:20:36', '2', 'Laundry sedang libur,'),
+(6, 'K0001', 'Satuan', 'Non-Tunai', '2022-03-12 04:35:39', '2022-04-24 06:22:21', '3', 'Laundry sedang libur,'),
 (7, 'K0003', 'Kiloan', 'Tunai', '2022-03-12 06:46:53', '2022-03-17 22:37:35', '2', 'Cuaca hujan,'),
 (8, 'K0001', 'Kiloan', 'Tunai', '2022-03-19 03:24:08', '2022-03-19 03:24:08', '0', NULL);
 
@@ -438,8 +431,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `kd_pengguna`, `name`, `role`, `avatar`, `username`, `email_verified_at`, `password`, `id_outlet`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'U0001', 'Shandika', 'admin', 'PP1.jpg', 'XNor', NULL, '$2y$10$m8bJvENlsp5rUqMBm9uN1uuOs/BF7tWsm35vWFOV6GnXRPwOF4T7W', 0, 'Kca97nRh8nssWavsEjxQpYVaRifbRJocc9aUsnjWkpJXC3eGH1F6grEIvhmE', '2022-01-17 23:52:09', '2022-04-13 14:21:25'),
-(2, 'K0001', 'Rudi', 'member', 'default.png', 'user1', NULL, '$2y$10$XVzcg2qhOGqPrKDJUheOFej3wqL8rJ6evG8efRJBUvOfulAuAUb32', 0, '8xXpGg6uMLIt93XRYUGfX1tE99hFo8OHPU5nCcuu1RDET3bVThtsegv6Nyr8', '2022-02-03 06:29:09', '2022-02-03 06:29:09'),
+(1, 'U0001', 'Shandika', 'admin', 'PP1.jpg', 'XNor', NULL, '$2y$10$m8bJvENlsp5rUqMBm9uN1uuOs/BF7tWsm35vWFOV6GnXRPwOF4T7W', 0, 'WJxTc58HSHJZXOwMC6N65y2SPP7rpjJ4lazNKppz5G3fPzVCcq0YQMqqJYb5', '2022-01-17 23:52:09', '2022-04-13 14:21:25'),
+(2, 'K0001', 'Rudi', 'member', 'default.png', 'user1', NULL, '$2y$10$xm56CQswhUeoOZ0kJUeTherciwuB0SJPaqYf3Zn3Z6yY7yRH1JE0O', 0, '01QTsgX0zxp9fI6ZLrVyTm4NeAInHch6GDCW5lS5R4rWpEmzoxfo8S28cGpR', '2022-02-03 06:29:09', '2022-04-24 06:01:30'),
 (4, 'K0003', 'Fajar', 'non_member', 'default.png', 'fajar', NULL, '$2y$10$lPAhoCoJRoewHcmmaGsHPe9btzW2DBzVXm3/OYHfE7dAQeQvTsn6.', 0, 'zmXMuXpGZKOL4WzCQwKGmuKkq85Gg9BAEOvjTjIfQsitLfqw9M6QyiWa05nP', '2022-02-09 06:05:21', '2022-02-09 06:05:21'),
 (5, 'K0004', 'Rina', 'member', 'default.png', 'rina', NULL, '$2y$10$XVzcg2qhOGqPrKDJUheOFej3wqL8rJ6evG8efRJBUvOfulAuAUb32', 0, 'HOrpNCPrcwhyUdoC56fYieHWjjdbbrjyNIQtBT6d6kfm2OHlCENkeltmLBUV', '2022-02-09 06:24:48', '2022-02-09 06:24:48'),
 (9, 'K0005', 'Toni', 'non_member', 'default.png', 'toni', NULL, '$2y$10$FQhXRGyhsGYyfNY/FkZnwO.e1E6CBEzObuScwPA2Hgs6lReAmcYKm', 0, 'gKcFW4Lkr0LiXnzTQ8hXcJ2GcqruYU9KLDZKTj4tr4FFrymJjv98ScDWq5sn', '2022-03-24 02:28:10', '2022-03-24 02:28:10'),
@@ -548,7 +541,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `checkout_kilos`
@@ -572,13 +565,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `mutasi_barangs`
 --
 ALTER TABLE `mutasi_barangs`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `outlets`
