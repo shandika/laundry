@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Laporan Transaksi</title>
+	<title>Laporan Barang</title>
 	<style type="text/css">
 		html{
 			margin: 0;
@@ -55,7 +55,7 @@
 				<td class="text-right" style="padding-top: 50px; padding-right: 50px;">Clean Yours<br>Jasa Laundry Terbaik di Indonesia</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="font-size: 28px; color: #313131; padding-top: 15px; padding-right: 50px;" class="text-right">Invoice</td>
+				<td colspan="2" style="font-size: 28px; color: #313131; padding-top: 15px; padding-right: 50px;" class="text-right">Data Barang</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="text-right" style="padding-right: 50px;">
@@ -97,20 +97,20 @@
 			<tr>
 				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
 				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL BIAYA BELANJA</th>
-				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px;">:</th>
 				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($tot,2,',','.') }}</th>
 			</tr>
 			<tr>
 				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
 				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL BIAYA SISA</th>
-				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px;">:</th>
 				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($sis,2,',','.') }}</th>
-				<th style="font-weight:bold; font-size:20px; margin-top:20px;">-</th>
+				<th style="font-weight:bold; font-size:30px; text-align: bottom;">-</th>
 			</tr>
-			<tr style="column-width:250px;">
+			<tr>
 				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
 				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL PENGELUARAN</th>
-				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px;">:</th>
 				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($pengeluarans,2,',','.') }}</th>
 			</tr>
 		</table>
