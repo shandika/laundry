@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Session;
+use DB;
 use App\Barang;
 use App\Mutasi_barang;
 
@@ -96,6 +97,7 @@ class HalInventoryController extends Controller
                 $barangs->jumlah_awal = $req->jumlah_barang;
                 $barangs->jumlah_akhir = $req->jumlah_barang;
                 $Barangs->harga = $req->harga_barang;
+                $barangs->sisa = $barangs->total - ($barangs->total - ($req->jumlah_barang * $barangs->harga));
                 $barangs->save();
                 
                 $Mutasis = new Mutasi_barang;
@@ -115,6 +117,7 @@ class HalInventoryController extends Controller
                 $barangs->nama_barang   = $req->nama_barang;
                 $barangs->jumlah_akhir  = $req->jumlah_barang;
                 $barangs->harga         = $req->harga_barang;
+                $barangs->sisa = $barangs->total - ($barangs->total - ($req->jumlah_barang * $barangs->harga));
                 $barangs->save();
                 
                 $Mutasis = new Mutasi_barang;

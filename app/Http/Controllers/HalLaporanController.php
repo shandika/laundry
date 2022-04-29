@@ -196,7 +196,6 @@ class HalLaporanController extends Controller
 	            'tanggal' => $tanggal,
 	            'start_date2' => $start_date2,
 	            'end_date2' => $end_date2,
-	            'pemasukan' => $pemasukan
 	        ]);
 	        return $pdf->stream();
     	}else{
@@ -241,12 +240,18 @@ class HalLaporanController extends Controller
 	    	$tanggal = "Semua Invoice";
 	    	$start_date2 = "";
 	    	$end_date2 = "";
+			$tot = Barang::select('barangs')->sum('total');
+        	$sis = Barang::select('barangs')->sum('sisa');
+        	$pengeluarans = $tot - $sis;
 
 	    	$pdf = PDF::loadview('halaman_laporan.pdf_laporan_barang', [
 	            'barangs' => $barangs,
 	            'tanggal' => $tanggal,
 	            'start_date2' => $start_date2,
-	            'end_date2' => $end_date2
+	            'end_date2' => $end_date2,
+				'pengeluarans' => $pengeluarans,
+				'tot' => $tot,
+				'sis' => $sis
 	        ]);
 	        return $pdf->stream();
     	}else{

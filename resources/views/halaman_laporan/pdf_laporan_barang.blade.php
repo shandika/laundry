@@ -77,6 +77,8 @@
                 <th>Jumlah Awal</th>
                 <th>Jumlah Sekarang</th>
                 <th>Harga Barang</th>
+				<th>Total</th>
+				<th>Sisa</th>
                 <th>Tanggal Updated</th>
 			</tr>
 			@foreach($barangs as $barang)
@@ -87,14 +89,29 @@
                 <td class="text-center">{{ $barang->jumlah_awal }}</td>
                 <td class="text-center">{{ $barang->jumlah_akhir }}</td>
                 <td class="text-center">Rp. {{ number_format($barang->harga,2,',','.') }}</td>
+				<td class="text-center">Rp. {{ number_format($barang->total,2,',','.') }}</td>
+				<td class="text-center">Rp. {{ number_format($barang->sisa,2,',','.') }}</td>
                 <td class="text-center">{{ date('d M Y', strtotime($barang->updated_at)) }}</td>
 			</tr>
 			@endforeach
 			<tr>
-				<th colspan="4" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
-				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL PEMASUKKAN</th>
+				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL BIAYA BELANJA</th>
 				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
-				<th style="padding-top: 10px; padding-bottom: 10px; text-align: right; color: #7572f7;">Rp. {{ number_format($barang->total,2,',','.') }}</th>
+				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($tot,2,',','.') }}</th>
+			</tr>
+			<tr>
+				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL BIAYA SISA</th>
+				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($sis,2,',','.') }}</th>
+				<th style="font-weight:bold; font-size:20px; margin-top:20px;">-</th>
+			</tr>
+			<tr style="column-width:250px;">
+				<th colspan="6" style="border-bottom: 0px; padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px; color: #454545; text-align: left;">TOTAL PENGELUARAN</th>
+				<th style="padding-top: 10px; padding-bottom: 10px;"></th>
+				<th style="padding-top: 10px; padding-bottom: 10px; text-align: left; color: #7572f7;">Rp. {{ number_format($pengeluarans,2,',','.') }}</th>
 			</tr>
 		</table>
 	</div>
