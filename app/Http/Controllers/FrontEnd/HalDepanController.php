@@ -62,4 +62,12 @@ class HalDepanController extends Controller
         Session::flash('terubah', 'Password berhasil dirubah');
         return redirect('/login');
     }
+
+    // Kirim masukan
+    public function kirimMasukan(Request $req, $pesan)
+    {
+        $pesan = $req->pesan;
+        Session::flash('terubah', 'Password berhasil dirubah');
+        return redirect('/');
+    }
 }
