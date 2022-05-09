@@ -359,16 +359,16 @@ https://templatemo.com/tm-570-chain-app-dev
           </div>
         </div>
         <div class="col-lg-6 offset-lg-3">
-          <form id="search" action="#" method="GET">
+          <form id="masukan" action="{{ url('https://wa.me/085759045485?text=') }}" method="POST">
             <div class="row">
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <textarea name="address" class="textmasukan" placeholder="Ketik disini" autocomplete="on" required></textarea>
+                  <textarea name="pesan" class="textmasukan" placeholder="Ketik disini" autocomplete="on" required></textarea>
                 </fieldset>
               </div>
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
-                  <button type="submit" class="main-button">Kirim Masukan <i class="fa fa-angle-right"></i></button>
+                  <button type="submit" class="btn btn-default main-button">Kirim Masukan <i class="fa fa-angle-right"></i></button>
                 </fieldset>
               </div>
             </div>
@@ -400,8 +400,8 @@ https://templatemo.com/tm-570-chain-app-dev
           <div class="footer-widget">
             <h4>Contact Us</h4>
             <ul>
-              <li><a href="whatsapp://send?text=Hello&phone=+628118794225">Whatsapp</a></li>
-              <li><a href="https://www.instagram.com/cleanyours_/?hl=id">Instagram</a></li>
+              <li><a href="https://api.whatsapp.com/send?phone=628118794225" target="_blank">Whatsapp</a></li>
+              <li><a href="https://www.instagram.com/cleanyours_/?hl=id" target="_blank">Instagram</a></li>
               <li><a href="#">Telegram</a></li>
             </ul>
           </div>
