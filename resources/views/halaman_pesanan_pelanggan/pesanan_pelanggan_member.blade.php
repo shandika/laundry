@@ -174,20 +174,23 @@
 										<tbody class="isi_tabel_kiloan">
 										</tbody>
 									</table>
-									<table style="width: 100%;" class="table table_satuan" hidden="">
-										<thead class="text-center">
-											<tr>
-												<th>No</th>
-												<th>Barang</th>
-												<th>Keterangan</th>
-												<th>Jumlah</th>
-												<th>Harga</th>
-												<th>Subtotal</th>
-											</tr>
-										</thead>
-										<tbody class="isi_tabel_satuan">
-										</tbody>
-									</table>
+									<div style="text-align: center;" class="table-responsive">
+									    <table class="table table_satuan" hidden="">
+									        <thead class="text-center">
+									            <tr>
+									                <th>No</th>
+									                <th>Barang</th>
+									                <th>Keterangan</th>
+									                <th>Jumlah</th>
+									                <th>Harga</th>
+									                <th>Subtotal</th>
+									            </tr>
+									        </thead>
+									        <tbody class="isi_tabel_satuan">
+									        </tbody>
+									    </table>
+									</div>
+									
 								</div>
 							</div>
 							<div class="row">
@@ -246,12 +249,12 @@
                 <div class="col-md-3 text-left">
                     <h4>Daftar Pesanan</h4>
                 </div>
-                <div class="col-md-9" style="margin-top: -10px;">
+                <div class="col-md-9" style="margin-top: 10px;">
                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-flat btn-primary" id="proses-btn">Proses</button>
-                        <button class="btn btn-flat btn-outline-primary ml-2" id="selesai-btn">Selesai</button>
-                        <button class="btn btn-flat btn-outline-primary ml-2" id="diantar-btn">Diantar</button>
-                        <button class="btn btn-flat btn-outline-primary ml-2" id="diambil-btn">Diambil</button>
+                        <button class="btn btn-flat btn-primary btn-sm" id="proses-btn">Proses</button>
+                        <button class="btn btn-flat btn-outline-primary ml-2 btn-sm" id="selesai-btn">Selesai</button>
+                        <button class="btn btn-flat btn-outline-primary ml-2 btn-sm" id="diantar-btn">Diantar</button>
+                        <button class="btn btn-flat btn-outline-primary ml-2 btn-sm" id="diambil-btn">Diambil</button>
                     </div>
                 </div>
             </div>
