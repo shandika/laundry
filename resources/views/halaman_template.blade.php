@@ -120,13 +120,10 @@
                     </li>
                     @if(auth()->user()->role == 'admin')
                     <li class="nav-label">Inventory</li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="fa fa-folder menu-icon"></i><span class="nav-text">Inventory</span>
+                    <li>
+                        <a href="{{ url('/kelola_barang') }}" aria-expanded="false">
+                            <i class="fa fa-folder"></i><span class="nav-text">Kelola Data Barang</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('/kelola_barang') }}">Kelola Data Barang</a></li>
-                        </ul>
                     </li>
                     @endif
                     <li class="nav-label">Laporan</li>

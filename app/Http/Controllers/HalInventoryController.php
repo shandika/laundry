@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Session;
+use DB;
 use App\Barang;
 use App\Mutasi_barang;
 
@@ -12,7 +13,9 @@ class HalInventoryController extends Controller
     //Membuka halaman kelola data barang
     public function halamanKelolaBarang()
     {
-        $barangs = Barang::all();
+        $barangs = Barang::select('barangs.*')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
         $jumlah_awal = Barang::join('mutasi_barangs', 'id_barang', '=', 'barangs.kd_barang')
         ->select('barangs.*', 'mutasi_barangs.jumlah_awal', 'mutasi_barangs.jumlah_akhir')
         ->orderBy('mutasi_barangs.created_at', 'asc')
@@ -60,6 +63,8 @@ class HalInventoryController extends Controller
         $Mutasis->id_barang = $max_code_barang; 
         $Mutasis->jumlah_awal = $req->jumlah_barang;
         $Mutasis->jumlah_akhir = $req->jumlah_barang;
+        $Mutasis->total = $req->harga_barang * $req->jumlah_barang;
+        $Mutasis->sisa = $req->harga_barang * $req->jumlah_barang;
         $Mutasis->save();
 
         Session::flash('tersimpan', 'Barang baru berhasil ditambahkan');
@@ -84,24 +89,30 @@ class HalInventoryController extends Controller
         ->first();
 
         if ($awal->jumlah_akhir == 0) {
+            // edit nama dll
             if ($barangs->jumlah_akhir == $req->jumlah_barang) {
                 $barangs->nama_barang = $req->nama_barang;
                 $barangs->jumlah_awal = $req->jumlah_barang;
                 $barangs->jumlah_akhir = $req->jumlah_barang;
-                $Barangs->harga = $req->harga_barang;
+                $barangs->harga = $req->harga_barang;
                 $barangs->save();
                 
             }else{
+                // Tambah barang dari 0
                 $barangs->nama_barang = $req->nama_barang;
-                $barangs->jumlah_awal = $req->jumlah_barang;
+                $barangs->jumlah_awal = $req->jumlah_barang + $barangs->jumlah_awal;
                 $barangs->jumlah_akhir = $req->jumlah_barang;
-                $Barangs->harga = $req->harga_barang;
+                $barangs->harga = $req->harga_barang;
+                $barangs->total         = ($req->harga_barang * $req->jumlah_barang) + ($barangs->total);
+                $barangs->sisa          = ($req->harga_barang * $req->jumlah_barang) + ($barangs->sisa);
                 $barangs->save();
                 
                 $Mutasis = new Mutasi_barang;
                 $Mutasis->id_barang     = $barangs->kd_barang; 
                 $Mutasis->jumlah_awal   = $awal->jumlah_akhir;
                 $Mutasis->jumlah_akhir  = $req->jumlah_barang;
+                $Mutasis->total = $req->harga_barang * $req->jumlah_barang;
+                $Mutasis->sisa = $req->harga_barang * $req->jumlah_barang;
                 $Mutasis->save();
             }
         }else{
@@ -112,15 +123,19 @@ class HalInventoryController extends Controller
                 $barangs->save();
                 
             }else{
+                // edit jumlah barang
                 $barangs->nama_barang   = $req->nama_barang;
                 $barangs->jumlah_akhir  = $req->jumlah_barang;
                 $barangs->harga         = $req->harga_barang;
+                $barangs->sisa = $barangs->total - ($barangs->total - ($req->jumlah_barang * $barangs->harga));
                 $barangs->save();
                 
                 $Mutasis = new Mutasi_barang;
                 $Mutasis->id_barang = $barangs->kd_barang; 
                 $Mutasis->jumlah_awal = $awal->jumlah_akhir;
                 $Mutasis->jumlah_akhir = $req->jumlah_barang;
+                $Mutasis->total = $akhir->total;
+                $Mutasis->sisa = $barangs->total - ($barangs->total - ($req->jumlah_barang * $barangs->harga));
                 $Mutasis->save();
             }
         }
@@ -158,7 +173,9 @@ class HalInventoryController extends Controller
     // Laporan
     public function laporan()
     {
-        $barangs = Barang::all();
+        $barangs = Barang::select('barangs.*')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         $jumlah_awal = Barang::join('mutasi_barangs', 'id_barang', '=', 'barangs.kd_barang')
         ->select('barangs.*', 'mutasi_barangs.jumlah_awal', 'mutasi_barangs.jumlah_akhir')
         ->orderBy('mutasi_barangs.created_at', 'asc')

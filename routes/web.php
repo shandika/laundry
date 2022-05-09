@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth', 'checkRole:admin,kasir']], function(){
 	Route::get('/laporan_pegawai_riwayat/{id}', 'HalLaporanController@halamanLaporanPegawaiRiwayat');
 	Route::post('/filter_laporan_transaksi', 'HalLaporanController@filterLaporanTransaksi');
 	Route::post('/filter_laporan_pegawai/{id}', 'HalLaporanController@filterLaporanPegawai');
+	Route::post('/filter_laporan_barang', 'HalLaporanController@filterLaporanBarang');
 	Route::post('/pdf_laporan_transaksi', 'HalLaporanController@pdfLaporanTransaksi');
 	Route::post('/pdf_laporan_pegawai/{id}', 'HalLaporanController@pdfLaporanPegawai');
 	Route::post('/pdf_laporan_barang', 'HalLaporanController@pdfLaporanBarang');

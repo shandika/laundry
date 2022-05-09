@@ -14,7 +14,7 @@
     <div class="col p-md-0">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Laporan</a></li>
-            <li class="breadcrumb-item active"><a href="{{ url('/laporan_transaksi') }}">Laporan Transaksi</a></li>
+            <li class="breadcrumb-item active"><a href="{{ url('/laporan_inventory') }}">Laporan Barang</a></li>
         </ol>
     </div>
 </div>
@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <div class="row">
                     	<div class="col-md-12">
-                    		<h4 class="card-title">Daftar Transaksi</h4>
+                    		<h4 class="card-title">Daftar Barang</h4>
                     	</div>
                     </div>
                     <div class="row mt-3">
@@ -71,6 +71,8 @@
                                             <th>Jumlah Awal</th>
                                             <th>Jumlah Sekarang</th>
                                             <th>Harga Barang</th>
+											<th>Total</th>
+											<th>Sisa</th>
                                             <th>Tanggal Updated</th>
 		                                </tr>
 		                            </thead>
@@ -84,7 +86,9 @@
                                         <td class="text-center">{{ $barang->jumlah_awal }}</td>
                                         <td class="text-center">{{ $barang->jumlah_akhir }}</td>
                                         <td class="text-center">Rp. {{ number_format($barang->harga,2,',','.') }}</td>
-                                        <td class="text-center">{{ date('d M Y', strtotime($barang->updated_at)) }}</td>
+										<td class="text-center">Rp. {{ number_format($barang->total,2,',','.') }}</td>
+										<td class="text-center">Rp. {{ number_format($barang->sisa,2,',','.') }}</td>
+                                        <td class="text-center">{{ date('d F Y', strtotime($barang->updated_at)) }}</td>
 		                            	</tr>
 		                            	<?php $number++; ?>
 		                            	@endforeach
@@ -185,7 +189,7 @@
 			e.preventDefault();
 			var request = new FormData(this);
 			$.ajax({
-				url: "{{ url('/filter_laporan_transaksi') }}",
+				url: "{{ url('/filter_laporan_barang') }}",
 				method: "POST",
 				data: request,
 				contentType: false,

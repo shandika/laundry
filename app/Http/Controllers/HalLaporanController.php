@@ -118,6 +118,32 @@ class HalLaporanController extends Controller
     	}
     }
 
+	// Filter Laporan Barang
+    public function filterLaporanBarang(Request $req)
+    {
+		if($req->check_semua == 1){
+    		$barangs = $barangs = Barang::all();
+	    	$tanggal = "Semua Data Barang";
+	    	$start_date2 = "";
+	    	$end_date2 = "";
+			$tot = Barang::select('barangs')->sum('total');
+        	$sis = Barang::select('barangs')->sum('sisa');
+        	$pengeluarans = $tot - $sis;
+
+	    	return view('halaman_laporan.sort_halaman_laporan_barang', compact('barangs', 'tot', 'sis', 'pengeluaran'));
+    	}else{
+    		$start_date = $req->start_date;
+    		$end_date = $req->end_date;
+    		$start_date2 = $start_date[6].$start_date[7].$start_date[8].$start_date[9].'-'.$start_date[0].$start_date[1].'-'.$start_date[3].$start_date[4];
+    		$end_date2 = $end_date[6].$end_date[7].$end_date[8].$end_date[9].'-'.$end_date[0].$end_date[1].'-'.$end_date[3].$end_date[4];
+			$barangs = $barangs = Barang::select('barangs.*')
+			->whereBetween('created_at', array($start_date2, $end_date2))
+			->get();
+    	
+	    	return view('halaman_laporan.sort_halaman_laporan_barang', compact('barangs'));
+    	}
+    }
+
     // Cetak PDF Laporan Pegawai
     public function pdfLaporanPegawai(Request $req, $id)
     {
@@ -196,7 +222,6 @@ class HalLaporanController extends Controller
 	            'tanggal' => $tanggal,
 	            'start_date2' => $start_date2,
 	            'end_date2' => $end_date2,
-	            'pemasukan' => $pemasukan
 	        ]);
 	        return $pdf->stream();
     	}else{
@@ -238,15 +263,21 @@ class HalLaporanController extends Controller
     {
     	if($req->check_semua == 1){
     		$barangs = $barangs = Barang::all();
-	    	$tanggal = "Semua Invoice";
+	    	$tanggal = "Semua Data Barang";
 	    	$start_date2 = "";
 	    	$end_date2 = "";
+			$tot = Barang::select('barangs')->sum('total');
+        	$sis = Barang::select('barangs')->sum('sisa');
+        	$pengeluarans = $tot - $sis;
 
 	    	$pdf = PDF::loadview('halaman_laporan.pdf_laporan_barang', [
 	            'barangs' => $barangs,
 	            'tanggal' => $tanggal,
 	            'start_date2' => $start_date2,
-	            'end_date2' => $end_date2
+	            'end_date2' => $end_date2,
+				'pengeluarans' => $pengeluarans,
+				'tot' => $tot,
+				'sis' => $sis
 	        ]);
 	        return $pdf->stream();
     	}else{
@@ -254,21 +285,22 @@ class HalLaporanController extends Controller
     		$end_date = $req->end_date;
     		$start_date2 = $start_date[6].$start_date[7].$start_date[8].$start_date[9].'-'.$start_date[0].$start_date[1].'-'.$start_date[3].$start_date[4];
     		$end_date2 = $end_date[6].$end_date[7].$end_date[8].$end_date[9].'-'.$end_date[0].$end_date[1].'-'.$end_date[3].$end_date[4];
-    		$riwayats = Transaksi::join('users', 'users.kd_pengguna', '=', 'transaksis.kd_pegawai')
-	    	->join('outlets', 'outlets.id', '=', 'transaksis.id_outlet')
-	    	->join('pelanggans', 'pelanggans.kd_pelanggan', '=', 'transaksis.kd_pelanggan')
-	    	->select('transaksis.*', 'outlets.nama as nama_outlet', 'pelanggans.nama_pelanggan')
-	    	->where('transaksis.kd_pegawai', $users->kd_pengguna)
-	    	->whereBetween('transaksis.tgl_pemberian', array($start_date2, $end_date2))
-	    	->orderBy('transaksis.tgl_pemberian', 'DESC')
-	    	->get();
+    		$barangs = Barang::select('barangs.*')
+			->whereBetween('created_at', array($start_date2, $end_date2))
+			->get();
+			$tot = Barang::select('barangs')->whereBetween('created_at', array($start_date2, $end_date2))->sum('total');
+        	$sis = Barang::select('barangs')->whereBetween('created_at', array($start_date2, $end_date2))->sum('sisa');
+        	$pengeluarans = $tot - $sis;
 	    	$tanggal = "";
 
-	    	$pdf = PDF::loadview('halaman_laporan.pdf_laporan_pegawai', [
-	            'riwayats' => $riwayats,
+	    	$pdf = PDF::loadview('halaman_laporan.pdf_laporan_barang', [
+	            'barangs' => $barangs,
 	            'tanggal' => $tanggal,
 	            'start_date2' => $start_date2,
-	            'end_date2' => $end_date2
+	            'end_date2' => $end_date2,
+				'pengeluarans' => $pengeluarans,
+				'tot' => $tot,
+				'sis' => $sis
 	        ]);
 	        return $pdf->stream();
     	}

@@ -99,6 +99,8 @@
                                                     <th>Kd Barang</th>
                                                     <th>Jumlah Awal</th>
                                                     <th>Jumlah Sekarang</th>
+                                                    <th>Total</th>
+                                                    <th>Sisa</th>
                                                     <th>Tgl Perubahan</th>
                                                 </tr>
                                             </thead>
@@ -150,7 +152,7 @@
                                     <td class="text-center">Rp. {{ number_format($barang->harga,2,',','.') }}</td>
                                     <td class="text-center">Rp. {{ number_format($barang->total,2,',','.') }}</td>
                                     <td class="text-center">Rp. {{ number_format($barang->sisa,2,',','.') }}</td>
-                                    <td class="text-center">{{ date('d M Y', strtotime($barang->updated_at)) }}</td>
+                                    <td class="text-center">{{ date('d F Y', strtotime($barang->updated_at)) }}</td>
                                     <td style="text-align: center;">
                                     	<div class="dropdown custom-dropdown">
                                             <div data-toggle="dropdown" style="padding: 5px;"><i class="fa fa-ellipsis-v c-primary" style="font-size: 16px;"></i>
@@ -333,7 +335,7 @@ $(document).on('click', '.lihat_barang_btn', function(e){
             var isi_riwayat = "";
             for(var i = 0; i < response.mutasis.length; i++){
                 var no = i + 1;
-                isi_riwayat += '<tr><th>'+no+'</th><th>'+response.mutasis[i].nama_barang+'</th><td>'+response.mutasis[i].id_barang+'</td><td>'+response.mutasis[i].jumlah_awal+'</td><td>'+response.mutasis[i].jumlah_akhir+'</td><td>'+moment(response.mutasis[i].updated_at).format('DD MMMM YYYY')+'</td></tr>';
+                isi_riwayat += '<tr><th>'+no+'</th><th>'+response.mutasis[i].nama_barang+'</th><td>'+response.mutasis[i].id_barang+'</td><td>'+response.mutasis[i].jumlah_awal+'</td><td>'+response.mutasis[i].jumlah_akhir+'</td><td>'+response.mutasis[i].total+'</td><td>'+response.mutasis[i].sisa+'</td><td>'+moment(response.mutasis[i].updated_at).format('DD MMMM YYYY')+'</td></tr>';
             }
             $('.isi_riwayat').html(isi_riwayat);
         }
