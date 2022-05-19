@@ -52,6 +52,7 @@ class HalDashboardController extends Controller
     	->whereNotNull('transaksis.tgl_bayar')
     	->distinct()
     	->get();
+        
 
     	return view('halaman_dashboard', compact('jml_pegawai', 'jml_outlet', 'jml_pelanggan', 'jml_selesai', 'pelanggan_harian', 'semua_pelanggan_harian', 'pelanggan_terbaru', 'pelanggan_bayar', 'semua_pelanggan_bayar', 'outlets'));
     }

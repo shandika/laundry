@@ -346,6 +346,14 @@
 						<div class="layanan_member">
 						    <div class="row align-items-center">
 						        <div class="col-lg-12">
+                                    <hr>
+						            <select class="form-control pilih_invoice" name="pilih_invoice">
+						                <option value="" class="invoice_kosong">-- Pilih Invoice --</option>
+						                @foreach($invoices as $invoice)
+						                <option value="{{ $invoice->kd_invoice }}">{{ $invoice->kd_invoice }}</option>
+						                @endforeach
+						            </select>
+						            <div class="pilih_invoice_error"></div>
 						            <h4 class="mt-3 mb-3">Pilih Outlet</h4>
 						            <hr>
 						            <select class="form-control pilih_outlet" name="pilih_outlet">

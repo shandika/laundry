@@ -347,19 +347,25 @@
                         <div class="col-md-8">
                             <h4 class="mt-4 ml-5 text-primary">Selamat Datang {{ auth()->user()->name }}!</h4>
                             @php
-                                $pesanans = \App\Pesanan::select('pesanans.*')
-                                            ->where('kd_pelanggan', auth()->user()->kd_pengguna)
-                                            ->first();
+                                
+                            $pesanans = App\Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
+                            ->select('pesanans.*', 'transaksis.status as status_transaksi')
+                            ->where('pesanans.kd_pelanggan', auth()->user()->kd_pengguna)
+                            ->get();
                             @endphp
+                            @foreach ($pesanans as $pesanans)
                             @if($pesanans == null)
                             <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Untuk Memulai Order Silahkan Klik Menu Pesanan Saya</p>
                             @else
                                 @if($pesanans->status == 2)
-                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan pada tanggal {{ date('d M Y', strtotime($pesanans->created_at)) }} ditunda untuk sementara dikarenakan <em>{{ substr($pesanans->alasan_batal, 0, -1) }}</em></p>
-                                @elseif($pesanans->status == 1)
-                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan pada tanggal {{ date('d M Y', strtotime($pesanans->created_at)) }} sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda.</em></p>
+                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan {{ $pesanans->kd_invoice }} ditunda untuk sementara dikarenakan <em>{{ substr($pesanans->alasan_batal, 0, -1) }}</em></p>
+                                @elseif($pesanans->status == 1 && $pesanans->status_transaksi == 'baru' && $pesanans->pembayaran == 'Transfer')
+                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan {{ $pesanans->kd_invoice }} sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Transfer <strong><i> Rp. {{ number_format($pesanans->total_harga,2,',','.') }} </i></strong> Ke BANK BCA (5540-4588-73) Atas Nama SYAMSUNAR.</em></p>
+                                @elseif($pesanans->status == 1 && $pesanans->status_transaksi == 'baru' && $pesanans->pembayaran == 'Tunai')
+                                <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Pesanan {{ $pesanans->kd_invoice }} sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Uang Cash <strong><i> Rp. {{ number_format($pesanans->total_harga,2,',','.') }} </i></strong> </em></p>
                                 @endif
                             @endif
+                            @endforeach
                         </div>
                         <div class="col-md-4">
                             <img src="{{ asset('images/laundry.png') }}" class="laundry-gambar">

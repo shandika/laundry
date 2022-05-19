@@ -134,12 +134,16 @@ class HalPelangganController extends Controller
     {
         $outlets = Outlet::all();
         $pelanggans = Pelanggan::find($id);
+        $invoices = Pesanan::select('pesanans.*')
+        ->where('kd_pelanggan', $pelanggans->kd_pelanggan)
+        ->where('status', '0')
+        ->get();
         $akun_pelanggans = User::select('users.*')
         ->where('kd_pengguna', $pelanggans->kd_pelanggan)
         ->first();
         if($pelanggans->cek_member == 'member')
         {
-            return view('halaman_pelanggan.halaman_layanan_member', compact('id', 'outlets', 'pelanggans', 'akun_pelanggans'));
+            return view('halaman_pelanggan.halaman_layanan_member', compact('id', 'outlets', 'pelanggans', 'invoices', 'akun_pelanggans'));
         }else{
             return redirect()->back();
         }
@@ -150,12 +154,15 @@ class HalPelangganController extends Controller
     {
         $outlets = Outlet::all();
         $pelanggans = Pelanggan::find($id);
+        $invoices = Pesanan::select('pesanans.*')
+        ->where('kd_pelanggan', $pelanggans->kd_pelanggan)
+        ->get();
         $akun_pelanggans = User::select('users.*')
         ->where('kd_pengguna', $pelanggans->kd_pelanggan)
         ->first();
         if($pelanggans->cek_member == 'non_member')
         {
-            return view('halaman_pelanggan.halaman_layanan_non_member', compact('id', 'outlets', 'pelanggans', 'akun_pelanggans'));
+            return view('halaman_pelanggan.halaman_layanan_non_member', compact('id', 'outlets', 'pelanggans', 'invoices', 'akun_pelanggans'));
         }else{
             return redirect()->back();
         }
@@ -164,8 +171,6 @@ class HalPelangganController extends Controller
     // Membuka Halaman Pesanan Baru
     public function halamanPesanan()
     {
-        // $pesanans = Pesanan::select('pesanans.*')
-        // ->get();
         $pesanans = Pesanan::join('pelanggans', 'pelanggans.kd_pelanggan', '=', 'pesanans.kd_pelanggan')
         ->select('pesanans.*', 'pelanggans.id as id_pelanggan', 'pelanggans.nama_pelanggan', 'pelanggans.cek_member', 'pelanggans.alamat_pelanggan', 'pelanggans.no_hp_pelanggan')
         ->orderBy('pesanans.created_at', 'desc')
@@ -203,6 +208,14 @@ class HalPelangganController extends Controller
         $pesanans->save();
         Session::flash('terubah', 'Pesanan Dibatalkan');
 		return redirect('/pesanan_baru');
+    }
+
+    // Hapus Pesanan
+    public function hapusPesanan($id)
+    {
+        Pesanan::where('id', $id)->delete();
+        Session::flash('terhapus', 'Data pesanan berhasil dihapus');
+        return redirect('/pesanan_baru');
     }
 
     // Membuka Halaman Transaksi Masuk
@@ -432,6 +445,8 @@ class HalPelangganController extends Controller
         }
         $transaksi_delete = Transaksi::where('kd_pelanggan', $pelanggans->kd_pelanggan)
         ->delete();
+        $pesanan_delete = Pesanan::where('kd_pelanggan', $pelanggans->kd_pelanggan)
+        ->delete();
         $akun_pelanggans = User::where('kd_pengguna', $pelanggans->kd_pelanggan)
         ->delete();
         $pelanggans->delete();
@@ -457,8 +472,8 @@ class HalPelangganController extends Controller
     // Menyimpan Pesanan Member
     public function simpanPesanan(Request $req)
     {
-        $max_transaksi = Transaksi::max('kd_invoice');
-        $check_max_transkasi = Transaksi::select('transaksis.kd_invoice')
+        $max_transaksi = Pesanan::max('kd_invoice');
+        $check_max_transkasi = Pesanan::select('pesanans.kd_invoice')
         ->count();
         if($check_max_transkasi == null){
             $max_code_transaksi = "I0001";
@@ -479,106 +494,224 @@ class HalPelangganController extends Controller
         $hari_ini = Carbon\Carbon::now();
         $hari_ini2 = $hari_ini->isoFormat('Y-M-D');
         $hari_ini3 = Carbon\Carbon::create($hari_ini2);
+        $pesanans = Pesanan::select('pesanans.*')
+        ->where('kd_invoice', $req->pilih_invoice)
+        ->first();
 
-        if($req->bayar_bayar_kilo != null)
-        {
-            $struks = new Struk;
-            $struks->kd_invoice = $max_code_transaksi;
-            $struks->harga_total = $req->total_bayar_kilo_2;
-            $struks->harga_bayar = $req->bayar_bayar_kilo;
-            $struks->harga_kembali = $req->kembali_bayar_kilo_2;
-            $struks->save();
-        }
-
-        if($req->bayar_bayar_satu != null)
-        {
-            $struks = new Struk;
-            $struks->kd_invoice = $max_code_transaksi;
-            $struks->harga_total = $req->total_bayar_satu_2;
-            $struks->harga_bayar = $req->bayar_bayar_satu;
-            $struks->harga_kembali = $req->kembali_bayar_satu_2;
-            $struks->save();
-        }
-
-        if($req->jenis_laundry == 'kiloan')
-        {
-            $haris = Paket_kilo::select('paket_kilos.*')
-            ->where('kd_paket', $req->jenis_paket)
-            ->first();
-            $hari_kedepan = $hari_ini3->addDays($haris->hari_paket)->isoFormat('Y-M-D');
-            $transaksis = new Transaksi;
-            $transaksis->id_outlet = $req->pilih_outlet;
-            $transaksis->kd_invoice = $max_code_transaksi;
-            $transaksis->kd_pelanggan = $req->kd_pelanggan;
-            $transaksis->tgl_pemberian = $hari_ini2;
-            $transaksis->tgl_selesai = $hari_kedepan;
-            $transaksis->status = "baru";
+        if ($req->pilih_invoice != null) {
             if($req->bayar_bayar_kilo != null)
             {
-                $transaksis->tgl_bayar = $hari_ini2;
-                $transaksis->diskon = $req->diskon_bayar_kilo;
-                $transaksis->pajak = $req->pajak_bayar_kilo;
-                $transaksis->ket_bayar = "dibayar";
-            }else{
-                $transaksis->ket_bayar = "belum_dibayar";
+                $struks = new Struk;
+                $struks->kd_invoice = $req->pilih_invoice;
+                $struks->harga_total = $req->total_bayar_kilo_2;
+                $struks->harga_bayar = $req->bayar_bayar_kilo;
+                $struks->harga_kembali = $req->kembali_bayar_kilo_2;
+                $struks->save();
             }
-            $transaksis->kd_pegawai = $req->user()->kd_pengguna;
-            $transaksis->save();
-
-            $checkout_kilos = new Checkout_kilo;
-            $checkout_kilos->kd_invoice = $max_code_transaksi;
-            $checkout_kilos->kd_paket = $req->jenis_paket;
-            $checkout_kilos->berat_barang = $req->berat_barang;
-            $checkout_kilos->metode_pembayaran = $req->metode_pembayaran_kilo;
-            $checkout_kilos->harga_paket = $req->harga_paket_kiloan;
-            if($req->antar_harga_kiloan != '')
+        }else{
+            if($req->bayar_bayar_kilo != null)
             {
-                $checkout_kilos->harga_antar = $req->antar_harga_kiloan;
-            }else{
-                $checkout_kilos->harga_antar = 0;
+                $struks = new Struk;
+                $struks->kd_invoice = $max_code_transaksi;
+                $struks->harga_total = $req->total_bayar_kilo_2;
+                $struks->harga_bayar = $req->bayar_bayar_kilo;
+                $struks->harga_kembali = $req->kembali_bayar_kilo_2;
+                $struks->save();
             }
-            $checkout_kilos->harga_total = $req->total_kiloan_rp;
-            $checkout_kilos->save();
-        }elseif($req->jenis_laundry == 'satuan'){
-            $transaksis = new Transaksi;
-            $transaksis->id_outlet = $req->pilih_outlet;
-            $transaksis->kd_invoice = $max_code_transaksi;
-            $transaksis->kd_pelanggan = $req->kd_pelanggan;
-            $transaksis->tgl_pemberian = $hari_ini2;
-            $transaksis->status = "baru";
+        }
+
+        if ($req->pilih_invoice != null) {
             if($req->bayar_bayar_satu != null)
             {
-                $transaksis->tgl_bayar = $hari_ini2;
-                $transaksis->diskon = $req->diskon_bayar_satu;
-                $transaksis->pajak = $req->pajak_bayar_satu;
-                $transaksis->ket_bayar = "dibayar";
-            }else{
-                $transaksis->ket_bayar = "belum_dibayar";
+                $struks = new Struk;
+                $struks->kd_invoice = $req->pilih_invoice;
+                $struks->harga_total = $req->total_bayar_satu_2;
+                $struks->harga_bayar = $req->bayar_bayar_satu;
+                $struks->harga_kembali = $req->kembali_bayar_satu_2;
+                $struks->save();
             }
-            $transaksis->kd_pegawai = $req->user()->kd_pengguna;
-            $transaksis->save();
+        }else{
+            if($req->bayar_bayar_satu != null)
+            {
+                $struks = new Struk;
+                $struks->kd_invoice = $max_code_transaksi;
+                $struks->harga_total = $req->total_bayar_satu_2;
+                $struks->harga_bayar = $req->bayar_bayar_satu;
+                $struks->harga_kembali = $req->kembali_bayar_satu_2;
+                $struks->save();
+            }
+        }
 
-            $jml_barang = count($req->kd_barang);
-            for ($i=0; $i < $jml_barang; $i++) { 
-                if($req->jumlah_barang[$i] != 0)
+        if ($req->pilih_invoice != null) {
+            if($req->jenis_laundry == 'kiloan')
+            {
+                $haris = Paket_kilo::select('paket_kilos.*')
+                ->where('kd_paket', $req->jenis_paket)
+                ->first();
+                $hari_kedepan = $hari_ini3->addDays($haris->hari_paket)->isoFormat('Y-M-D');
+                $transaksis = new Transaksi;
+                $transaksis->id_outlet = $req->pilih_outlet;
+                $transaksis->kd_invoice = $req->pilih_invoice;
+                $transaksis->kd_pelanggan = $req->kd_pelanggan;
+                $transaksis->tgl_pemberian = $hari_ini2;
+                $transaksis->tgl_selesai = $hari_kedepan;
+                $transaksis->status = "baru";
+                if($req->bayar_bayar_kilo != null)
                 {
-                    $checkout_satus = new Checkout_satu;
-                    $checkout_satus->kd_invoice = $max_code_transaksi;
-                    $checkout_satus->kd_barang = $req->kd_barang[$i];
-                    $checkout_satus->jumlah_barang = $req->jumlah_barang[$i];
-                    $checkout_satus->metode_pembayaran = $req->metode_pembayaran_satu;
-                    $checkout_satus->harga_barang = $req->subtotal[$i];
-                    if($req->antar_harga_satuan != '')
+                    $transaksis->tgl_bayar = $hari_ini2;
+                    $transaksis->diskon = $req->diskon_bayar_kilo;
+                    $transaksis->pajak = $req->pajak_bayar_kilo;
+                    $transaksis->ket_bayar = "dibayar";
+                }else{
+                    $transaksis->ket_bayar = "belum_dibayar";
+                }
+                $transaksis->kd_pegawai = $req->user()->kd_pengguna;
+                $transaksis->save();
+    
+                $checkout_kilos = new Checkout_kilo;
+                $checkout_kilos->kd_invoice = $req->pilih_invoice;
+                $checkout_kilos->kd_paket = $req->jenis_paket;
+                $checkout_kilos->berat_barang = $req->berat_barang;
+                $checkout_kilos->metode_pembayaran = $req->metode_pembayaran_kilo;
+                $checkout_kilos->harga_paket = $req->harga_paket_kiloan;
+                if($req->antar_harga_kiloan != '')
+                {
+                    $checkout_kilos->harga_antar = $req->antar_harga_kiloan;
+                }else{
+                    $checkout_kilos->harga_antar = 0;
+                }
+                $checkout_kilos->harga_total = $req->total_kiloan_rp;
+                $checkout_kilos->save();
+
+                $pesanans->total_harga = $req->total_kiloan_rp;
+                $pesanans->status = 1;
+                $pesanans->save();
+            }elseif($req->jenis_laundry == 'satuan'){
+                $transaksis = new Transaksi;
+                $transaksis->id_outlet = $req->pilih_outlet;
+                $transaksis->kd_invoice = $req->pilih_invoice;
+                $transaksis->kd_pelanggan = $req->kd_pelanggan;
+                $transaksis->tgl_pemberian = $hari_ini2;
+                $transaksis->status = "baru";
+                if($req->bayar_bayar_satu != null)
+                {
+                    $transaksis->tgl_bayar = $hari_ini2;
+                    $transaksis->diskon = $req->diskon_bayar_satu;
+                    $transaksis->pajak = $req->pajak_bayar_satu;
+                    $transaksis->ket_bayar = "dibayar";
+                }else{
+                    $transaksis->ket_bayar = "belum_dibayar";
+                }
+                $transaksis->kd_pegawai = $req->user()->kd_pengguna;
+                $transaksis->save();
+    
+                $jml_barang = count($req->kd_barang);
+                for ($i=0; $i < $jml_barang; $i++) { 
+                    if($req->jumlah_barang[$i] != 0)
                     {
-                        $checkout_satus->harga_antar = $req->antar_harga_satuan;
-                    }else{
-                        $checkout_satus->harga_antar = 0;
+                        $checkout_satus = new Checkout_satu;
+                        $checkout_satus->kd_invoice = $req->pilih_invoice;
+                        $checkout_satus->kd_barang = $req->kd_barang[$i];
+                        $checkout_satus->jumlah_barang = $req->jumlah_barang[$i];
+                        $checkout_satus->metode_pembayaran = $req->metode_pembayaran_satu;
+                        $checkout_satus->harga_barang = $req->subtotal[$i];
+                        if($req->antar_harga_satuan != '')
+                        {
+                            $checkout_satus->harga_antar = $req->antar_harga_satuan;
+                        }else{
+                            $checkout_satus->harga_antar = 0;
+                        }
+                        $checkout_satus->harga_total = $req->total_satuan_rp;
+                        $checkout_satus->save();
+
+                        $pesanans->total_harga = $req->total_satuan_rp;
+                        $pesanans->status = 1;
+                        $pesanans->save();
                     }
-                    $checkout_satus->harga_total = $req->total_satuan_rp;
-                    $checkout_satus->save();
+                }
+            }   
+        }else{
+            if($req->jenis_laundry == 'kiloan')
+            {
+                $haris = Paket_kilo::select('paket_kilos.*')
+                ->where('kd_paket', $req->jenis_paket)
+                ->first();
+                $hari_kedepan = $hari_ini3->addDays($haris->hari_paket)->isoFormat('Y-M-D');
+                $transaksis = new Transaksi;
+                $transaksis->id_outlet = $req->pilih_outlet;
+                $transaksis->kd_invoice = $max_code_transaksi;
+                $transaksis->kd_pelanggan = $req->kd_pelanggan;
+                $transaksis->tgl_pemberian = $hari_ini2;
+                $transaksis->tgl_selesai = $hari_kedepan;
+                $transaksis->status = "baru";
+                if($req->bayar_bayar_kilo != null)
+                {
+                    $transaksis->tgl_bayar = $hari_ini2;
+                    $transaksis->diskon = $req->diskon_bayar_kilo;
+                    $transaksis->pajak = $req->pajak_bayar_kilo;
+                    $transaksis->ket_bayar = "dibayar";
+                }else{
+                    $transaksis->ket_bayar = "belum_dibayar";
+                }
+                $transaksis->kd_pegawai = $req->user()->kd_pengguna;
+                $transaksis->save();
+    
+                $checkout_kilos = new Checkout_kilo;
+                $checkout_kilos->kd_invoice = $max_code_transaksi;
+                $checkout_kilos->kd_paket = $req->jenis_paket;
+                $checkout_kilos->berat_barang = $req->berat_barang;
+                $checkout_kilos->metode_pembayaran = $req->metode_pembayaran_kilo;
+                $checkout_kilos->harga_paket = $req->harga_paket_kiloan;
+                if($req->antar_harga_kiloan != '')
+                {
+                    $checkout_kilos->harga_antar = $req->antar_harga_kiloan;
+                }else{
+                    $checkout_kilos->harga_antar = 0;
+                }
+                $checkout_kilos->harga_total = $req->total_kiloan_rp;
+                $checkout_kilos->save();
+            }elseif($req->jenis_laundry == 'satuan'){
+                $transaksis = new Transaksi;
+                $transaksis->id_outlet = $req->pilih_outlet;
+                $transaksis->kd_invoice = $max_code_transaksi;
+                $transaksis->kd_pelanggan = $req->kd_pelanggan;
+                $transaksis->tgl_pemberian = $hari_ini2;
+                $transaksis->status = "baru";
+                if($req->bayar_bayar_satu != null)
+                {
+                    $transaksis->tgl_bayar = $hari_ini2;
+                    $transaksis->diskon = $req->diskon_bayar_satu;
+                    $transaksis->pajak = $req->pajak_bayar_satu;
+                    $transaksis->ket_bayar = "dibayar";
+                }else{
+                    $transaksis->ket_bayar = "belum_dibayar";
+                }
+                $transaksis->kd_pegawai = $req->user()->kd_pengguna;
+                $transaksis->save();
+    
+                $jml_barang = count($req->kd_barang);
+                for ($i=0; $i < $jml_barang; $i++) { 
+                    if($req->jumlah_barang[$i] != 0)
+                    {
+                        $checkout_satus = new Checkout_satu;
+                        $checkout_satus->kd_invoice = $max_code_transaksi;
+                        $checkout_satus->kd_barang = $req->kd_barang[$i];
+                        $checkout_satus->jumlah_barang = $req->jumlah_barang[$i];
+                        $checkout_satus->metode_pembayaran = $req->metode_pembayaran_satu;
+                        $checkout_satus->harga_barang = $req->subtotal[$i];
+                        if($req->antar_harga_satuan != '')
+                        {
+                            $checkout_satus->harga_antar = $req->antar_harga_satuan;
+                        }else{
+                            $checkout_satus->harga_antar = 0;
+                        }
+                        $checkout_satus->harga_total = $req->total_satuan_rp;
+                        $checkout_satus->save();
+                    }
                 }
             }
         }
+
         Session::flash('tersimpan', 'Pesanan baru berhasil dibuat');
         echo "sukses";
     }

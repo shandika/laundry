@@ -21,6 +21,7 @@
     font-size: 11px;
 }
 </style>
+
 @endsection
 @section('konten')
 <div class="row page-titles mx-0">
@@ -44,6 +45,7 @@
                             <thead style="text-align: center;">
                                 <tr>
                                     <th>No</th>
+                                    <th>Kode Invoice</th>
                                     <th>Jenis Cucian</th>
                                     <th>Pembayaran</th>
                                     <td>Nama Pelanggan</td>
@@ -52,6 +54,7 @@
                                     <td>Tanggal Memesan</td>
                                     <td>Tanggal Diproses</td>
                                     <th>Status</th>
+                                    <th>Bukti Transfer</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -60,6 +63,7 @@
                                 @foreach($pesanans as $pesanan)
                                 <tr>
                                     <th class="align-middle text-center">{{ $number }}</th>
+                                    <td>{{ $pesanan->kd_invoice }}</td>
                                     <td>{{ $pesanan->jenis_cucian }}</td>
                                     <td>{{ $pesanan->pembayaran }}</td>
                                     <td>{{ $pesanan->nama_pelanggan }}</td>
@@ -69,21 +73,29 @@
                                     <td>{{ date('d M Y', strtotime($pesanan->updated_at)) }}</td>
                                     <td>
                                         @if($pesanan->status == 0)
-                                        <button class="btn btn-warning" disabled>Belum Diproses</button>
+                                        <button class="btn btn-warning btn-flat" disabled>Belum Diproses</button>
                                         @elseif($pesanan->status == 1)
-                                        <p>Sedang Diproses</p>
+                                        <button class="btn btn-primary btn-flat" disabled>Sedang Diproses</button>
                                         @elseif($pesanan->status == 2)
-                                        <p>Pesanan Dibatalkan</p>
+                                        <button class="btn btn-danger btn-flat" disabled>Pesanan Dibatalkan</button>
                                         @elseif($pesanan->status == 3)
-                                        <p>Pesanan Selesai</p>
+                                        <button class="btn btn-success btn-flat" disabled>Pesanan Selesai</button>
                                         @endif
                                     </td>
+                                    <th>
+                                        @if($pesanan->pembayaran == 'Tunai')
+                                        <p class="text-center">Bayar Tunai</p>
+                                        @else
+										@if($pesanan->upload == '')
+										<p class="text-center">Belum Transfer</p>
+										@else
+										<img src="{{ asset('/storage/bukti-transfer/'.$pesanan->upload) }}" alt="" style="width:205px;" class="thumbnail zoom">
+										@endif
+                                        @endif
+									</th>
                                     <td>
                                     @if($pesanan->status == 0)
-                                    <form action="{{ url('/edit_pesanan/'.$pesanan->id) }}" method="post">
-                                        @csrf
-                                    <button type="submit" class="btn btn-sm btn-primary font-weight-bold">Proses</button>
-                                    </form>
+                                    <a href="{{ url('/kelola_pelanggan/') }}" class="btn btn-sm btn-primary font-weight-bold">Proses</a>
                                     @elseif($pesanan->status == 1)
                                     <button class="btn font-weight-bold btn-sm mb-1 btn-danger" data-toggle="modal" data-target="#modalBatal{{ $pesanan->id }}">Batalkan </button>
                                     <form action="{{ url('/selesai_pesanan/'.$pesanan->id) }}" method="post">
@@ -96,7 +108,7 @@
                                     <button type="submit" class="btn btn-sm btn-primary font-weight-bold">Proses</button>
                                     </form>
                                     @elseif($pesanan->status == 3)
-                                    <p class="text-center">-</p>
+                                    <a href="#" class="btn btn-sm btn-primary font-weight-bold tombol-hapus" data-id="{{ $pesanan->id }}" data-nama="{{ $pesanan->id }}">Hapus</a>
                                     @endif
                                     </td>
                                 </tr>
@@ -106,7 +118,7 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Alasn Batal Pesanan</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Alasan Batal Pesanan</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -173,6 +185,7 @@
 <script src="{{ asset('plugins/tables/js/datatable-init/datatable-basic.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert/js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('plugins/toastr/js/toastr.min.js') }}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 $(document).on('click', '.lihat_pengguna_btn', function(e){
     e.preventDefault();
@@ -250,5 +263,25 @@ swal(
     "success"
 );
 @endif
+</script>
+<script>
+    $('.tombol-hapus').click(function () {
+        var id = $(this).attr('data-id');
+        var nama = $(this).attr('data-nama');
+        swal({
+            title: "Yakin?",
+            text: "Kamu akan menghapus pesanan "+nama+" ",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                window.location = "/hapus_pesanan/"+id+""
+            } else {
+                swal("Data tidak jadi dihapus");
+            }
+        });
+    });
 </script>
 @endsection

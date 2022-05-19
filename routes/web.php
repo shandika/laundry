@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth', 'checkRole:admin,kasir']], function(){
 	Route::post('/edit_pesanan/{id}', 'HalPelangganController@updatePesanan');
 	Route::post('/selesai_pesanan/{id}', 'HalPelangganController@selesaiPesanan');
 	Route::post('/batalkan_pesanan/{id}', 'HalPelangganController@batalkanPesanan');
+	Route::get('/hapus_pesanan/{id}','HalPelangganController@hapusPesanan');
 	Route::post('/jadikan_member/{id}', 'HalPelangganController@jadikanMember');
 // => Halaman Transaksi
 	Route::get('/lihat_transaksi_selesai/{id}', 'HalTransaksiController@lihatTransaksiSelesai');
@@ -143,6 +144,7 @@ Route::group(['middleware' => ['auth', 'checkRole:member,non_member']], function
 	Route::get('/pesanan_saya', 'HalPesananPelangganController@halamanPesananPelanggan');
 	Route::get('/lihat_pesanan_pelanggan/{id}', 'HalPesananPelangganController@lihatPesananPelanggan');
 	Route::post('/simpan_pesanan_baru', 'HalPesananPelangganController@pesanBaru');
+	Route::post('/upload_bukti_transfer/{id}', 'HalPesananPelangganController@uploadBuktiTransfer');
 });
 // =================================================================================================
 

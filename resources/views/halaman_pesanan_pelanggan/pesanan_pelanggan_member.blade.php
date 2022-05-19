@@ -58,10 +58,13 @@
 							<thead style="text-align: center;">
 								<tr>
 									<th>No</th>
+									<th>Kode Invoice</th>
 									<th>Jenis Cucian</th>
 									<th>Pembayaran</th>
 									<th>Tanggal Memesan</th>
 									<th>Status</th>
+									<th>Bukti Transfer</th>
+									<th>Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -69,6 +72,7 @@
 								@foreach($pesanans as $pesanan)
 								<tr>
 									<th class="align-middle text-center">{{ $number }}</th>
+									<td>{{ $pesanan->kd_invoice }}</td>
 									<td>{{ $pesanan->jenis_cucian }}</td>
 									<td>{{ $pesanan->pembayaran }}</td>
 									<td>{{ date('d M Y', strtotime($pesanan->created_at)) }}</td>
@@ -83,8 +87,57 @@
 										<p>Pesanan Selesai</p>
 										@endif
 									</td>
+									<th>
+										@if($pesanan->upload == '')
+										<p class="text-center">-</p>
+										@else
+										<img src="{{ asset('/storage/bukti-transfer/'.$pesanan->upload) }}" class="thumbnail zoom" alt="" style="width:205px;">
+										@endif
+									</th>
+									<td>
+										@if($pesanan->status == 1 && $pesanan->status_transaksi == 'baru' && $pesanan->pembayaran == 'Transfer')
+										<button class="btn font-weight-bold btn-sm mb-1 btn-primary" data-toggle="modal" data-target="#modalUpload{{ $pesanan->kd_invoice }}">Upload Bukti Transfer </button>
+										@endif
+									</td>
 								</tr>
 								<?php $number++ ?>
+								<!-- Modal Upload -->
+								<div class="modal fade" id="modalUpload{{ $pesanan->kd_invoice }}" tabindex="-1" role="dialog"
+								    aria-labelledby="modalBatal" aria-hidden="true">
+								    <div class="modal-dialog" role="document">
+								        <div class="modal-content">
+								            <div class="modal-header">
+								                <h5 class="modal-title" id="exampleModalLabel">Upload Bukti Transfer</h5>
+								                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								                    <span aria-hidden="true">&times;</span>
+								                </button>
+								            </div>
+								            <div class="modal-body">
+								                <form action="{{ url('/upload_bukti_transfer/'.$pesanan->id) }}" class="form-upload"
+								                    method="POST" enctype="multipart/form-data">
+								                    @csrf
+								                    <div class="row">
+								                        <div class="col-md-12">
+								                            <div class="form-group">
+								                                <div style="margin-bottom: -10px;">
+								                                    <p class="font-weight-bold text-dark">Bukti Transfer : </p>
+								                                </div>
+								                                <input type="file" class="form-control" name="transfer" id="transfer"
+								                                    required>
+								                            </div>
+								                            <div class="transfer_error" style="margin-top: -20px;"></div>
+								                        </div>
+								                    </div>
+								            </div>
+								            <div class="modal-footer">
+								                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-primary">Save changes</button>
+								            </div>
+								            </form>
+								        </div>
+								    </div>
+								</div>
+								<!-- End Modal -->
 								@endforeach
 							</tbody>
 						</table>
@@ -407,7 +460,7 @@
         </button>
       </div>
       <div class="modal-body">
-		<form action="{{ url('/simpan_pesanan_baru') }}" method="post" enctype="multipart/form-data">
+		<form action="{{ url('/simpan_pesanan_baru') }}" class="form-baru" method="post" enctype="multipart/form-data">
 			@csrf
         <input type="hidden" class="form-control" name="kode_pengguna" value="{{ auth()->user()->kd_pengguna }}">
 		<div class="row">
@@ -419,7 +472,7 @@
 					<label class="radio-inline">
 						<input type="radio" name="jenis_cucian" value="Kiloan" required> Cuci Kiloan</label>
 				</div>
-				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
+				<div class="jenis_cucian_error" style="margin-top: -20px;"></div>
 			</div>
 		</div>
 		<div class="row">
@@ -429,9 +482,9 @@
 					<label class="radio-inline mr-3">
 						<input type="radio" name="pembayaran" value="Tunai" required> Tunai</label>
 					<label class="radio-inline">
-						<input type="radio" name="pembayaran" value="Non-Tunai" required> Non-Tunai</label>
+						<input type="radio" name="pembayaran" value="Transfer" required> Transfer</label>
 				</div>
-				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
+				<div class="pembayaran_error" style="margin-top: -20px;"></div>
 			</div>
 		</div>
       </div>
@@ -702,5 +755,26 @@
         "success"
     );
 @endif
+
+</script>
+<script>
+	$(document).ready(function(){
+
+	$(".form-baru").validate({
+        rules: {
+          jenis_cucian: "required",
+		  pembayaran : "required"
+        },
+        messages: {
+          jenis_cucian: "<span style='color: red;'>Jenis Cucian tidak boleh kosong</span>",
+		  pembayaran: "<span style='color: red;'>Pembayaran tidak boleh kosong</span>"
+          },
+        errorPlacement: function ($error, $element) {
+            var name = $element.attr("name");
+
+            $("." + name + "_error").append($error);
+        }
+    });
+});
 </script>
 @endsection

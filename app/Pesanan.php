@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pesanan extends Model
 {
-     // Table Transaksis
+     // Table pesanans
      protected $fillable = [
-        'id', 'kd_pelanggan', 'jenis_cucian', 'pembayaran', 'status'
+        'id', 'kd_invoice', 'kd_pelanggan', 'jenis_cucian', 'pembayaran', 'total_harga', 'upload', 'status', 'alasan_batal'
     ];
 }

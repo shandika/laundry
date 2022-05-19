@@ -62,6 +62,7 @@
 									<th>Pembayaran</th>
 									<th>Tanggal Memesan</th>
 									<th>Status</th>
+									<th>Bukti Transfer</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -83,6 +84,13 @@
 										<p>Pesanan Selesai</p>
 										@endif
 									</td>
+									<th>
+										@if($pesanan->upload == '')
+										<p class="text-center">-</p>
+										@else
+										<img src="{{ asset('/storage/bukti-transfer/'.$pesanan->upload) }}" class="thumbnail zoom" alt="" style="width:205px;">
+										@endif
+									</th>
 								</tr>
 								<?php $number++ ?>
 								@endforeach
@@ -418,7 +426,7 @@
 					<label class="radio-inline">
 						<input type="radio" name="jenis_cucian" value="Kiloan"> Cuci Kiloan</label>
 				</div>
-				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
+				<div class="jenis_cucian_error" style="margin-top: -20px;"></div>
 			</div>
 		</div>
 		<div class="row">
@@ -428,9 +436,9 @@
 					<label class="radio-inline mr-3">
 						<input type="radio" name="pembayaran" value="Tunai"> Tunai</label>
 					<label class="radio-inline">
-						<input type="radio" name="pembayaran" value="Non-Tunai"> Non-Tunai</label>
+						<input type="radio" name="pembayaran" value="Transfer"> Transfer</label>
 				</div>
-				<div class="jk_pelanggan_error" style="margin-top: -20px;"></div>
+				<div class="pembayaran_error" style="margin-top: -20px;"></div>
 			</div>
 		</div>
       </div>
@@ -701,5 +709,25 @@
         "success"
     );
 @endif
+</script>
+<script>
+	$(document).ready(function(){
+
+	$(".form-baru").validate({
+        rules: {
+          jenis_cucian: "required",
+		  pembayaran : "required"
+        },
+        messages: {
+          jenis_cucian: "<span style='color: red;'>Jenis Cucian tidak boleh kosong</span>",
+		  pembayaran: "<span style='color: red;'>Pembayaran tidak boleh kosong</span>"
+          },
+        errorPlacement: function ($error, $element) {
+            var name = $element.attr("name");
+
+            $("." + name + "_error").append($error);
+        }
+    });
+});
 </script>
 @endsection

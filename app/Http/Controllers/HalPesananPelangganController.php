@@ -11,6 +11,7 @@ use App\Checkout_kilo;
 use App\Checkout_satu;
 use App\Pesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HalPesananPelangganController extends Controller
 {
@@ -26,8 +27,9 @@ class HalPesananPelangganController extends Controller
             ->select('transaksis.*', 'outlets.nama as nama_outlet', 'users.name as nama_pegawai', 'users.kd_pengguna')
             ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
-            $pesanans = Pesanan::select('pesanans.*')
-            ->where('kd_pelanggan', $users->kd_pengguna)
+            $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
+            ->select('pesanans.*', 'transaksis.status as status_transaksi')
+            ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
             ->orderBy('created_at', 'desc')
             ->get();
             return view('halaman_pesanan_pelanggan.pesanan_pelanggan_member', compact('transaksis', 'pesanans'));
@@ -37,8 +39,9 @@ class HalPesananPelangganController extends Controller
             ->select('transaksis.*', 'outlets.nama as nama_outlet', 'users.name as nama_pegawai', 'users.kd_pengguna')
             ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
-            $pesanans = Pesanan::select('pesanans.*')
-            ->where('kd_pelanggan', $users->kd_pengguna)
+            $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
+            ->select('pesanans.*', 'transaksis.status as status_transaksi')
+            ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
             ->orderBy('created_at', 'desc')
             ->get();
             return view('halaman_pesanan_pelanggan.pesanan_pelanggan_non_member', compact('transaksis', 'pesanans'));
@@ -104,13 +107,52 @@ class HalPesananPelangganController extends Controller
     // Pesanan Baru
     public function pesanBaru(Request $req)
     {
+        $max_transaksi = Pesanan::max('kd_invoice');
+        $check_max_transkasi = Pesanan::select('pesanans.kd_invoice')
+        ->count();
+        if($check_max_transkasi == null){
+            $max_code_transaksi = "I0001";
+        }else{
+            $max_code_transaksi = $max_transaksi[1].$max_transaksi[2].$max_transaksi[3].$max_transaksi[4];
+            $max_code_transaksi++;
+            if($max_code_transaksi <= 9){
+                $max_code_transaksi = "I000".$max_code_transaksi;
+            }elseif ($max_code_transaksi <= 99) {
+                $max_code_transaksi = "I00".$max_code_transaksi;
+            }elseif ($max_code_transaksi <= 999) {
+                $max_code_transaksi = "I0".$max_code_transaksi;
+            }elseif ($max_code_transaksi <= 9999) {
+                $max_code_transaksi = "I".$max_code_transaksi;
+            }
+        }
+
         $pesanans = new Pesanan;
+        $pesanans->kd_invoice = $max_code_transaksi;
         $pesanans->kd_pelanggan = $req->kode_pengguna;
         $pesanans->jenis_cucian = $req->jenis_cucian;
         $pesanans->pembayaran   = $req->pembayaran;
         $pesanans->status       = 0;
         $pesanans->save();
         Session::flash('tersimpan', 'Pesanan Baru Telah Ditambahkan');
+        return redirect('/pesanan_saya');
+    }
+
+    // Upload Bukti Transfer
+    public function uploadBuktiTransfer(Request $req, $id)
+    {
+        $pesanans = Pesanan::find($id);
+        if ($req->transfer != '') {
+            $pesanans->status = 1;
+            $avatar = $req->file('transfer');
+            $fileName = time() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->storeAs('public/bukti-transfer', $fileName);
+            if ($pesanans->upload) {
+				Storage::delete('public/bukti-transfer/' . $pesanans->upload);
+			}
+            $pesanans->upload = $fileName;
+            $pesanans->save();     
+        }
+		Session::flash('tersimpan', 'Berhasil Mengupload Bukti Transfer');
         return redirect('/pesanan_saya');
     }
 }

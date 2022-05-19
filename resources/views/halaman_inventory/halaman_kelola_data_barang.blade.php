@@ -4,8 +4,7 @@
 <link href="{{ asset('plugins/sweetalert/css/sweetalert.css') }}" rel="stylesheet">
 <link href="{{ asset('plugins/toastr/css/toastr.min.css') }}" rel="stylesheet">
 
-<link href="{{ asset('plugins/sweetalert/css/sweetalert.css') }}" rel="stylesheet">
-<link href="{{ asset('plugins/toastr/css/toastr.min.css') }}" rel="stylesheet">
+
 <style type="text/css">
 .fotouser{
     object-fit: cover;

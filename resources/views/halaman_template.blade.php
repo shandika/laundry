@@ -7,6 +7,7 @@
     <title>CLEAN YOURS - Laundry</title>
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icons/laundry.png') }}">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/zoom.css') }}" rel="stylesheet">
     @yield('css')
 </head>
 <body>
