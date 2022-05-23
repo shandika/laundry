@@ -27,10 +27,13 @@ class HalPesananPelangganController extends Controller
             ->select('transaksis.*', 'outlets.nama as nama_outlet', 'users.name as nama_pegawai', 'users.kd_pengguna')
             ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
-            $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
-            ->select('pesanans.*', 'transaksis.status as status_transaksi')
-            ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
-            ->orderBy('created_at', 'desc')
+            // $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
+            // ->select('pesanans.*', 'transaksis.status as status_transaksi')
+            // ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
+            // ->orderBy('created_at', 'desc')
+            // ->get();
+            $pesanans = Pesanan::select('pesanans.*')
+            ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
             return view('halaman_pesanan_pelanggan.pesanan_pelanggan_member', compact('transaksis', 'pesanans'));
         }else{
@@ -39,10 +42,13 @@ class HalPesananPelangganController extends Controller
             ->select('transaksis.*', 'outlets.nama as nama_outlet', 'users.name as nama_pegawai', 'users.kd_pengguna')
             ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
-            $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
-            ->select('pesanans.*', 'transaksis.status as status_transaksi')
-            ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
-            ->orderBy('created_at', 'desc')
+            // $pesanans = Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
+            // ->select('pesanans.*', 'transaksis.status as status_transaksi')
+            // ->where('pesanans.kd_pelanggan', $users->kd_pengguna)
+            // ->orderBy('created_at', 'desc')
+            // ->get();
+            $pesanans = Pesanan::select('pesanans.*')
+            ->where('kd_pelanggan', $users->kd_pengguna)
             ->get();
             return view('halaman_pesanan_pelanggan.pesanan_pelanggan_non_member', compact('transaksis', 'pesanans'));
         }

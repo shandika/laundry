@@ -95,7 +95,7 @@
 										@endif
 									</th>
 									<td>
-										@if($pesanan->status == 1 && $pesanan->status_transaksi == 'baru' && $pesanan->pembayaran == 'Transfer')
+										@if($pesanan->status == 1 && $pesanan->pembayaran == 'Transfer')
 										<button class="btn font-weight-bold btn-sm mb-1 btn-primary" data-toggle="modal" data-target="#modalUpload{{ $pesanan->kd_invoice }}">Upload Bukti Transfer </button>
 										@endif
 									</td>

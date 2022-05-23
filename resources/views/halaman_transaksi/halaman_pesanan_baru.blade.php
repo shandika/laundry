@@ -96,8 +96,9 @@
                                     <td>
                                     @if($pesanan->status == 0)
                                     <a href="{{ url('/kelola_pelanggan/') }}" class="btn btn-sm btn-primary font-weight-bold">Proses</a>
-                                    @elseif($pesanan->status == 1)
                                     <button class="btn font-weight-bold btn-sm mb-1 btn-danger" data-toggle="modal" data-target="#modalBatal{{ $pesanan->id }}">Batalkan </button>
+                                    @elseif($pesanan->status == 1)
+                                    
                                     <form action="{{ url('/selesai_pesanan/'.$pesanan->id) }}" method="post">
                                         @csrf
                                     <button type="submit" class="btn btn-sm btn-success font-weight-bold">Selesai</button>

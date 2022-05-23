@@ -350,7 +350,7 @@
 						            <select class="form-control pilih_invoice" name="pilih_invoice">
 						                <option value="" class="invoice_kosong">-- Pilih Invoice --</option>
 						                @foreach($invoices as $invoice)
-						                <option value="{{ $invoice->kd_invoice }}">{{ $invoice->kd_invoice }}</option>
+						                <option value="{{ $invoice->kd_invoice }}">{{ $invoice->kd_invoice }} ({{ $invoice->pembayaran }} - {{ $invoice->jenis_cucian }})</option>
 						                @endforeach
 						            </select>
 						            <div class="pilih_invoice_error"></div>
