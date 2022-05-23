@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 29, 2022 at 01:11 PM
+-- Generation Time: May 23, 2022 at 03:40 PM
 -- Server version: 5.7.33
 -- PHP Version: 7.4.19
 
@@ -73,11 +73,7 @@ CREATE TABLE `checkout_kilos` (
 --
 
 INSERT INTO `checkout_kilos` (`id`, `kd_invoice`, `kd_paket`, `berat_barang`, `metode_pembayaran`, `harga_paket`, `harga_antar`, `harga_total`, `created_at`, `updated_at`) VALUES
-(1, 'I0005', 'PK001', 9, 'outlet', 270000, 0, 270000, '2022-02-08 09:25:30', '2022-02-08 09:25:30'),
-(3, 'I0006', 'PK001', 6, 'rumah', 180000, 5000, 185000, '2022-02-09 06:17:06', '2022-02-09 06:17:06'),
-(4, 'I0008', 'PK002', 4, 'rumah', 30000, 0, 30000, '2022-02-17 05:50:16', '2022-02-17 05:50:16'),
-(5, 'I0010', 'PK002', 1, 'rumah', 7500, 0, 7500, '2022-03-18 02:21:28', '2022-03-18 02:21:28'),
-(6, 'I0011', 'PK002', 1, 'outlet', 7500, 0, 7500, '2022-03-24 07:37:45', '2022-03-24 07:37:45');
+(14, 'I0005', 'PK002', 1, 'outlet', 7500, 0, 7500, '2022-05-23 15:06:13', '2022-05-23 15:06:13');
 
 -- --------------------------------------------------------
 
@@ -103,11 +99,7 @@ CREATE TABLE `checkout_satus` (
 --
 
 INSERT INTO `checkout_satus` (`id`, `kd_invoice`, `kd_barang`, `jumlah_barang`, `metode_pembayaran`, `harga_barang`, `harga_antar`, `harga_total`, `created_at`, `updated_at`) VALUES
-(1, 'I0001', 'PS001', 1, 'outlet', 5000, 0, 5000, '2022-02-03 06:29:09', '2022-02-03 06:29:09'),
-(3, 'I0003', 'PS001', 3, 'rumah', 15000, 5000, 20000, '2022-02-08 09:00:40', '2022-02-08 09:00:40'),
-(4, 'I0004', 'PS001', 2, 'rumah', 10000, 0, 10000, '2022-02-08 09:11:39', '2022-02-08 09:11:39'),
-(5, 'I0007', 'PS001', 3, 'outlet', 15000, 0, 15000, '2022-02-12 07:37:50', '2022-02-12 07:37:50'),
-(6, 'I0009', 'PS001', 1, 'rumah', 5000, 6000, 11000, '2022-03-17 20:48:42', '2022-03-17 20:48:42');
+(1, 'I0001', 'PS001', 1, 'outlet', 5000, 3000, 8000, '2022-05-23 14:49:26', '2022-05-23 14:49:26');
 
 -- --------------------------------------------------------
 
@@ -163,7 +155,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (20, '2022_03_29_121738_add_jumlah_to_barangs_table', 10),
 (21, '2022_04_12_201707_add_harga_to_barangs_table', 11),
 (22, '2022_04_28_111356_add_total_to_barangs_table', 12),
-(23, '2022_04_29_144823_add_total_to_mutasi_barangs_table', 13);
+(23, '2022_04_29_144823_add_total_to_mutasi_barangs_table', 13),
+(24, '2022_05_15_161642_add_kd_invoice_to_pesanans_table', 14),
+(25, '2022_05_16_211826_add_total_harga_to_pesanans', 15),
+(26, '2022_05_19_092845_add_upload_to_pesanans_table', 16);
 
 -- --------------------------------------------------------
 
@@ -265,7 +260,7 @@ CREATE TABLE `paket_satus` (
 --
 
 INSERT INTO `paket_satus` (`id`, `kd_barang`, `nama_barang`, `ket_barang`, `harga_barang`, `id_outlet`, `created_at`, `updated_at`) VALUES
-(1, 'PS001', 'Jeans', 'Celana/Baju', 5000, 1, '2022-02-03 06:25:03', '2022-02-03 06:25:03');
+(1, 'PS001', 'Jaket', 'Jaket (All)', 5000, 1, '2022-05-23 14:26:13', '2022-05-23 14:26:13');
 
 -- --------------------------------------------------------
 
@@ -320,9 +315,12 @@ INSERT INTO `pelanggans` (`id`, `kd_pelanggan`, `nama_pelanggan`, `tgl_lahir`, `
 
 CREATE TABLE `pesanans` (
   `id` int(10) UNSIGNED NOT NULL,
+  `kd_invoice` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `kd_pelanggan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `jenis_cucian` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pembayaran` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_harga` bigint(20) DEFAULT NULL,
+  `upload` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -333,10 +331,11 @@ CREATE TABLE `pesanans` (
 -- Dumping data for table `pesanans`
 --
 
-INSERT INTO `pesanans` (`id`, `kd_pelanggan`, `jenis_cucian`, `pembayaran`, `created_at`, `updated_at`, `status`, `alasan_batal`) VALUES
-(6, 'K0001', 'Satuan', 'Non-Tunai', '2022-03-12 04:35:39', '2022-04-24 06:22:21', '3', 'Laundry sedang libur,'),
-(7, 'K0003', 'Kiloan', 'Tunai', '2022-03-12 06:46:53', '2022-03-17 22:37:35', '2', 'Cuaca hujan,'),
-(8, 'K0001', 'Kiloan', 'Tunai', '2022-03-19 03:24:08', '2022-03-19 03:24:08', '0', NULL);
+INSERT INTO `pesanans` (`id`, `kd_invoice`, `kd_pelanggan`, `jenis_cucian`, `pembayaran`, `total_harga`, `upload`, `created_at`, `updated_at`, `status`, `alasan_batal`) VALUES
+(23, 'I0001', 'K0001', 'Satuan', 'Transfer', 8000, '1653317697.png', '2022-05-23 14:41:34', '2022-05-23 14:54:57', '1', NULL),
+(24, 'I0002', 'K0001', 'Kiloan', 'Transfer', NULL, NULL, '2022-05-23 14:43:52', '2022-05-23 14:43:52', '0', NULL),
+(25, 'I0003', 'K0003', 'Kiloan', 'Transfer', NULL, NULL, '2022-05-23 14:45:28', '2022-05-23 14:45:28', '0', NULL),
+(26, 'I0004', 'K0001', 'Satuan', 'Tunai', NULL, NULL, '2022-05-23 14:57:15', '2022-05-23 14:57:15', '0', NULL);
 
 -- --------------------------------------------------------
 
@@ -359,12 +358,10 @@ CREATE TABLE `struks` (
 --
 
 INSERT INTO `struks` (`id`, `kd_invoice`, `harga_total`, `harga_bayar`, `harga_kembali`, `created_at`, `updated_at`) VALUES
-(1, 'I0001', 5000, 10000, 5000, '2022-02-03 06:29:09', '2022-02-03 06:29:09'),
-(3, 'I0005', 243000, 300000, 57000, '2022-02-08 09:25:30', '2022-02-08 09:25:30'),
-(5, 'I0003', 18000, 20000, 2000, '2022-02-09 06:14:24', '2022-02-09 06:14:24'),
-(6, 'I0007', 15000, 20000, 5000, '2022-02-12 07:37:49', '2022-02-12 07:37:49'),
-(7, 'I0008', 28500, 50000, 21500, '2022-02-17 05:53:52', '2022-02-17 05:53:52'),
-(8, 'I0011', 6000, 20000, 14000, '2022-03-24 07:37:45', '2022-03-24 07:37:45');
+(13, 'I0001', 7500, 7500, 0, '2022-05-16 14:28:33', '2022-05-16 14:28:33'),
+(14, 'I0002', 183000, 183000, 0, '2022-05-16 14:30:56', '2022-05-16 14:30:56'),
+(15, 'I0001', 8000, 8000, 0, '2022-05-23 14:49:26', '2022-05-23 14:49:26'),
+(16, 'I0005', 7500, 10000, 2500, '2022-05-23 15:06:13', '2022-05-23 15:06:13');
 
 -- --------------------------------------------------------
 
@@ -394,16 +391,8 @@ CREATE TABLE `transaksis` (
 --
 
 INSERT INTO `transaksis` (`id`, `id_outlet`, `kd_invoice`, `kd_pelanggan`, `tgl_pemberian`, `tgl_selesai`, `tgl_bayar`, `diskon`, `pajak`, `status`, `ket_bayar`, `kd_pegawai`, `created_at`, `updated_at`) VALUES
-(1, 1, 'I0001', 'K0001', '2022-02-03', '2022-02-08', '2022-02-03', 0, 0, 'diambil', 'dibayar', 'U0001', '2022-02-03 06:29:09', '2022-02-08 03:11:59'),
-(3, 1, 'I0003', 'K0001', '2022-02-08', '2022-02-08', '2022-02-09', 10, 0, 'diantar', 'dibayar', 'U0001', '2022-02-08 09:00:40', '2022-02-09 06:14:24'),
-(4, 1, 'I0004', 'K0001', '2022-02-08', NULL, NULL, NULL, NULL, 'baru', 'belum_dibayar', 'U0001', '2022-02-08 09:11:39', '2022-02-08 09:11:39'),
-(5, 1, 'I0005', 'K0001', '2022-02-08', '2022-02-11', '2022-02-08', 10, 0, 'baru', 'dibayar', 'U0001', '2022-02-08 09:25:30', '2022-02-08 09:25:30'),
-(7, 1, 'I0006', 'K0003', '2022-02-09', '2022-02-12', NULL, NULL, NULL, 'baru', 'belum_dibayar', 'U0001', '2022-02-09 06:17:06', '2022-02-09 06:17:06'),
-(8, 1, 'I0007', 'K0003', '2022-02-12', NULL, '2022-02-12', 0, 0, 'proses', 'dibayar', 'U0001', '2022-02-12 07:37:50', '2022-02-12 07:46:41'),
-(9, 1, 'I0008', 'K0004', '2022-02-17', '2022-02-17', '2022-02-17', 5, 0, 'diambil', 'dibayar', 'U0001', '2022-02-17 05:50:16', '2022-02-17 05:55:56'),
-(10, 1, 'I0009', 'K0001', '2022-03-18', NULL, NULL, NULL, NULL, 'baru', 'belum_dibayar', 'U0001', '2022-03-17 20:48:42', '2022-03-17 20:48:42'),
-(11, 1, 'I0010', 'K0004', '2022-03-18', '2022-03-18', NULL, NULL, NULL, 'selesai', 'belum_dibayar', 'U0001', '2022-03-18 02:21:28', '2022-03-18 02:23:57'),
-(12, 1, 'I0011', 'K0006', '2022-03-24', '2022-03-27', '2022-03-24', 20, 0, 'baru', 'dibayar', 'U0001', '2022-03-24 07:37:45', '2022-03-24 07:37:45');
+(21, 1, 'I0001', 'K0001', '2022-05-23', NULL, '2022-05-23', 0, 0, 'proses', 'dibayar', 'U0001', '2022-05-23 14:49:26', '2022-05-23 14:56:25'),
+(22, 1, 'I0005', 'K0001', '2022-05-23', '2022-05-26', '2022-05-23', 0, 0, 'baru', 'dibayar', 'U0001', '2022-05-23 15:06:13', '2022-05-23 15:06:13');
 
 -- --------------------------------------------------------
 
@@ -431,9 +420,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `kd_pengguna`, `name`, `role`, `avatar`, `username`, `email_verified_at`, `password`, `id_outlet`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'U0001', 'Shandika', 'admin', 'PP1.jpg', 'XNor', NULL, '$2y$10$m8bJvENlsp5rUqMBm9uN1uuOs/BF7tWsm35vWFOV6GnXRPwOF4T7W', 0, 'WJxTc58HSHJZXOwMC6N65y2SPP7rpjJ4lazNKppz5G3fPzVCcq0YQMqqJYb5', '2022-01-17 23:52:09', '2022-04-13 14:21:25'),
-(2, 'K0001', 'Rudi', 'member', 'default.png', 'user1', NULL, '$2y$10$xm56CQswhUeoOZ0kJUeTherciwuB0SJPaqYf3Zn3Z6yY7yRH1JE0O', 0, '01QTsgX0zxp9fI6ZLrVyTm4NeAInHch6GDCW5lS5R4rWpEmzoxfo8S28cGpR', '2022-02-03 06:29:09', '2022-04-24 06:01:30'),
-(4, 'K0003', 'Fajar', 'non_member', 'default.png', 'fajar', NULL, '$2y$10$lPAhoCoJRoewHcmmaGsHPe9btzW2DBzVXm3/OYHfE7dAQeQvTsn6.', 0, 'zmXMuXpGZKOL4WzCQwKGmuKkq85Gg9BAEOvjTjIfQsitLfqw9M6QyiWa05nP', '2022-02-09 06:05:21', '2022-02-09 06:05:21'),
+(1, 'U0001', 'Shandika', 'admin', 'PP1.jpg', 'XNor', NULL, '$2y$10$m8bJvENlsp5rUqMBm9uN1uuOs/BF7tWsm35vWFOV6GnXRPwOF4T7W', 0, 'CgUxarD5NLX6zFLBovcd3Ox0OHS0x9jIMwGiJv05iBcIRYtvZ6tfkjorPros', '2022-01-17 23:52:09', '2022-04-13 14:21:25'),
+(2, 'K0001', 'Rudi', 'member', 'default.png', 'user1', NULL, '$2y$10$xm56CQswhUeoOZ0kJUeTherciwuB0SJPaqYf3Zn3Z6yY7yRH1JE0O', 0, 'cDR17Y58PKw9daD3s11TIqDJiMKRcZXkqAZhBPSakv1YXfs1JGpJTa2kMY09', '2022-02-03 06:29:09', '2022-04-24 06:01:30'),
+(4, 'K0003', 'Fajar', 'non_member', 'default.png', 'fajar', NULL, '$2y$10$lPAhoCoJRoewHcmmaGsHPe9btzW2DBzVXm3/OYHfE7dAQeQvTsn6.', 0, 'FvZTdd9KnzK2NjkxaqSG9lmkqJsgfJ8LSV05oPbUdgO2hpUjkcQIyvy3cFlA', '2022-02-09 06:05:21', '2022-02-09 06:05:21'),
 (5, 'K0004', 'Rina', 'member', 'default.png', 'rina', NULL, '$2y$10$XVzcg2qhOGqPrKDJUheOFej3wqL8rJ6evG8efRJBUvOfulAuAUb32', 0, 'HOrpNCPrcwhyUdoC56fYieHWjjdbbrjyNIQtBT6d6kfm2OHlCENkeltmLBUV', '2022-02-09 06:24:48', '2022-02-09 06:24:48'),
 (9, 'K0005', 'Toni', 'non_member', 'default.png', 'toni', NULL, '$2y$10$FQhXRGyhsGYyfNY/FkZnwO.e1E6CBEzObuScwPA2Hgs6lReAmcYKm', 0, 'gKcFW4Lkr0LiXnzTQ8hXcJ2GcqruYU9KLDZKTj4tr4FFrymJjv98ScDWq5sn', '2022-03-24 02:28:10', '2022-03-24 02:28:10'),
 (10, 'K0006', 'Gani', 'non_member', 'default.png', 'gani', NULL, '$2y$10$YfuU3NAwVeR3WvGuFwoN1exagB4VHSXzo9eF7sHxRoTPOHJKA78FG', 0, 'FxcWUc543gKOqfcQLeVeA4Gv8NPQ86lqm159E3v9GiSzDgcxK7025oFdpR2A', '2022-03-24 06:49:02', '2022-03-24 06:49:02');
@@ -547,13 +536,13 @@ ALTER TABLE `barangs`
 -- AUTO_INCREMENT for table `checkout_kilos`
 --
 ALTER TABLE `checkout_kilos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `checkout_satus`
 --
 ALTER TABLE `checkout_satus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -565,7 +554,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `mutasi_barangs`
@@ -601,19 +590,19 @@ ALTER TABLE `pelanggans`
 -- AUTO_INCREMENT for table `pesanans`
 --
 ALTER TABLE `pesanans`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `struks`
 --
 ALTER TABLE `struks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
