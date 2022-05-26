@@ -346,6 +346,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <h4 class="mt-4 ml-5 text-primary">Selamat Datang {{ auth()->user()->name }}!</h4>
+                            <p class="ml-5 mt-4 text-dark" style="font-weight: 500;">Untuk Mendapatkan Pemberitahuan Lewat Whatsapp, Silahkan Klik <a href="https://api.whatsapp.com/send?phone=14155238886&text=join%20safe-fix" target="_blank">Disini</a></p>
                             @php
                                 
                             $pesanans = App\Pesanan::join('transaksis', 'transaksis.kd_invoice', '=', 'pesanans.kd_invoice')
