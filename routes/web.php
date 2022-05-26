@@ -19,7 +19,7 @@ Route::get('/registrasi', 'FrontEnd\HalDepanController@registrasi')->name('regis
 Route::get('/lupa_password', 'FrontEnd\HalDepanController@lupaPassword');
 Route::post('/cek_email', 'FrontEnd\HalDepanController@cekEmail');
 Route::post('/ganti_password/{session}', 'FrontEnd\HalDepanController@gantiPassword');
-Route::post('kirim_masukan/https://wa.me/085759045485?text={$pesan}', 'FrontEnd\HalDepanController@kirimMasukan');
+Route::get('/kirim_masukan', 'FrontEnd\HalDepanController@kirimMasukan');
 // ===============================================================================================
 
 // ========================================== SISTEM LOGIN =========================================

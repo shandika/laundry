@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+    <link href="{{ asset('plugins/sweetalert/css/sweetalert.css') }}" rel="stylesheet">
 
     <title>CLEAN YOURS - Laundry</title>
 
@@ -359,7 +360,7 @@ https://templatemo.com/tm-570-chain-app-dev
           </div>
         </div>
         <div class="col-lg-6 offset-lg-3">
-          <form id="masukan" action="{{ url('https://wa.me/085759045485?text=') }}" method="POST">
+          <form id="masukan" action="{{ url('/kirim_masukan') }}" method="GET">
             <div class="row">
               <div class="col-lg-6 col-sm-6">
                 <fieldset>
@@ -433,12 +434,21 @@ https://templatemo.com/tm-570-chain-app-dev
   <script src="{{ asset('front-end/assets/js/imagesloaded.js') }}"></script>
   <script src="{{ asset('front-end/assets/js/popup.js') }}"></script>
   <script src="{{ asset('front-end/assets/js/custom.js') }}"></script>
+  <script src="{{ asset('plugins/sweetalert/js/sweetalert.min.js') }}"></script>
 
   <script>
     function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
         toggleMenu.classList.toggle('active')
     }
+
+    @if ($message = Session::get('terubah'))
+    swal(
+        "Berhasil!",
+        "{{ $message }}",
+        "success"
+    )
+    @endif
 </script>
 </body>
 </html>

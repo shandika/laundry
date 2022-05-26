@@ -8,6 +8,7 @@ use App\Pelanggan;
 use App\User;
 use Session;
 use Illuminate\Support\Facades\Hash;
+use Twilio\Rest\Client;
 
 class HalDepanController extends Controller
 {
@@ -64,10 +65,18 @@ class HalDepanController extends Controller
     }
 
     // Kirim masukan
-    public function kirimMasukan(Request $req, $pesan)
+    public function kirimMasukan(Request $req)
     {
-        $pesan = $req->pesan;
-        Session::flash('terubah', 'Password berhasil dirubah');
+        $sid    = getenv("TWILIO_AUTH_SID");
+        $token  = getenv("TWILIO_AUTH_TOKEN");
+        $wa_from= getenv("TWILIO_WHATSAPP_FROM");
+        $recipient = "+6285759045485";
+        $twilio = new Client($sid, $token);
+        
+        $body = $req->pesan;
+
+        $twilio->messages->create("whatsapp:$recipient",["from" => "whatsapp:$wa_from", "body" => $body]);
+        Session::flash('terubah', 'Masukan berhasil dikirim');
         return redirect('/');
     }
 }

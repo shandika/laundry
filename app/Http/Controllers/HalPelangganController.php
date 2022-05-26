@@ -18,6 +18,7 @@ use App\Checkout_satu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Twilio\Rest\Client;
 
 class HalPelangganController extends Controller
 {
@@ -586,6 +587,20 @@ class HalPelangganController extends Controller
                 $pesanans->total_harga = $req->total_kiloan_rp;
                 $pesanans->status = 1;
                 $pesanans->save();
+
+                $sid    = getenv("TWILIO_AUTH_SID");
+                $token  = getenv("TWILIO_AUTH_TOKEN");
+                $wa_from= getenv("TWILIO_WHATSAPP_FROM");
+                $recipient = "+6285759045485";
+                $twilio = new Client($sid, $token);
+                $total = number_format($pesanans->total_harga,2,',','.');
+
+                if ($pesanans->pembayaran == "Transfer") {
+                    $body = "Pesanan $pesanans->kd_invoice sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Transfer Rp. $total Ke BANK BCA (5540-4588-73) Atas Nama SYAMSUNAR.";
+                }else{
+                    $body = "Pesanan $pesanans->kd_invoice sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Uang Cash Rp. $total";
+                }
+                $twilio->messages->create("whatsapp:$recipient",["from" => "whatsapp:$wa_from", "body" => $body]);
             }elseif($req->jenis_laundry == 'satuan'){
                 $transaksis = new Transaksi;
                 $transaksis->id_outlet = $req->pilih_outlet;
@@ -627,6 +642,20 @@ class HalPelangganController extends Controller
                         $pesanans->total_harga = $req->total_satuan_rp;
                         $pesanans->status = 1;
                         $pesanans->save();
+
+                        $sid    = getenv("TWILIO_AUTH_SID");
+                        $token  = getenv("TWILIO_AUTH_TOKEN");
+                        $wa_from= getenv("TWILIO_WHATSAPP_FROM");
+                        $recipient = "+6285759045485";
+                        $twilio = new Client($sid, $token);
+                        $total = number_format($pesanans->total_harga,2,',','.');
+
+                        if ($pesanans->pembayaran == "Transfer") {
+                            $body = "Pesanan $pesanans->kd_invoice sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Transfer Rp. $total Ke BANK BCA (5540-4588-73) Atas Nama SYAMSUNAR.";
+                        }else{
+                            $body = "Pesanan $pesanans->kd_invoice sedang proses penjemputan ke tempat Anda, mohon siapkan pesanan laundry Anda dan Uang Cash Rp. $total";
+                        }
+                        $twilio->messages->create("whatsapp:$recipient",["from" => "whatsapp:$wa_from", "body" => $body]);
                     }
                 }
             }   
@@ -958,7 +987,7 @@ class HalPelangganController extends Controller
             $pelanggans->pekerjaan = $req->pekerjaan_pelanggan;
             $pelanggans->jk_pelanggan = $req->jk_pelanggan;
             $pelanggans->email_pelanggan = $req->email_pelanggan;
-            $pelanggans->no_hp_pelanggan = $req->no_hp_pelanggan;
+            $pelanggans->no_hp_pelanggan = $this->gantiformat($req->no_hp_pelanggan);
             $pelanggans->alamat_pelanggan = $req->alamat_pelanggan;
             $pelanggans->cek_member = "non_member";
             $pelanggans->password = $req->password;
@@ -979,6 +1008,32 @@ class HalPelangganController extends Controller
             
         }
         
+    }
+
+    private function gantiformat($nomorhp) {
+        //Terlebih dahulu kita trim dl
+        $nomorhp = trim($nomorhp);
+       //bersihkan dari karakter yang tidak perlu
+        $nomorhp = strip_tags($nomorhp);     
+       // Berishkan dari spasi
+       $nomorhp= str_replace(" ","",$nomorhp);
+       // bersihkan dari bentuk seperti  (022) 66677788
+        $nomorhp= str_replace("(","",$nomorhp);
+       // bersihkan dari format yang ada titik seperti 0811.222.333.4
+        $nomorhp= str_replace(".","",$nomorhp); 
+   
+        //cek apakah mengandung karakter + dan 0-9
+        if(!preg_match('/[^+0-9]/',trim($nomorhp))){
+            // cek apakah no hp karakter 1-3 adalah +62
+            if(substr(trim($nomorhp), 0, 3)=='+62'){
+                $nomorhp= trim($nomorhp);
+            }
+            // cek apakah no hp karakter 1 adalah 0
+           elseif(substr($nomorhp, 0, 1)=='0'){
+                $nomorhp= '+62'.substr($nomorhp, 1);
+            }
+        }
+        return $nomorhp;
     }
 
     public function cekFungsi()

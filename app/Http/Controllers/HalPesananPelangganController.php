@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Session;
 use App\User;
+use App\Pelanggan;
 use App\Struk;
 use App\Transaksi;
 use App\Checkout_kilo;
@@ -12,6 +13,7 @@ use App\Checkout_satu;
 use App\Pesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Twilio\Rest\Client;
 
 class HalPesananPelangganController extends Controller
 {
@@ -114,7 +116,10 @@ class HalPesananPelangganController extends Controller
     public function pesanBaru(Request $req)
     {
         $max_transaksi = Pesanan::max('kd_invoice');
+        $max_transaksi .= Transaksi::max('kd_invoice');
         $check_max_transkasi = Pesanan::select('pesanans.kd_invoice')
+        ->count();
+        $check_max_transkasi .= Transaksi::select('transaksis.kd_invoice')
         ->count();
         if($check_max_transkasi == null){
             $max_code_transaksi = "I0001";
@@ -132,6 +137,10 @@ class HalPesananPelangganController extends Controller
             }
         }
 
+        $akun = Pelanggan::select('pelanggans.*')
+        ->where('kd_pelanggan', $req->kode_pengguna)
+        ->first();
+
         $pesanans = new Pesanan;
         $pesanans->kd_invoice = $max_code_transaksi;
         $pesanans->kd_pelanggan = $req->kode_pengguna;
@@ -139,6 +148,17 @@ class HalPesananPelangganController extends Controller
         $pesanans->pembayaran   = $req->pembayaran;
         $pesanans->status       = 0;
         $pesanans->save();
+        
+        $sid    = getenv("TWILIO_AUTH_SID");
+        $token  = getenv("TWILIO_AUTH_TOKEN");
+        $wa_from= getenv("TWILIO_WHATSAPP_FROM");
+        $recipient = "+6285759045485";
+        $twilio = new Client($sid, $token);
+        
+        $body = "----Pesanan Baru---- \n Kode Invoice: $max_code_transaksi \n Jenis Cucian: $req->jenis_cucian \n Pembayaran: $req->pembayaran \n Nama Pelanggan: $akun->nama_pelanggan \n Alamat: $akun->alamat_pelanggan \n No HP: $akun->no_hp_pelanggan";
+
+        $twilio->messages->create("whatsapp:$recipient",["from" => "whatsapp:$wa_from", "body" => $body]);
+
         Session::flash('tersimpan', 'Pesanan Baru Telah Ditambahkan');
         return redirect('/pesanan_saya');
     }
